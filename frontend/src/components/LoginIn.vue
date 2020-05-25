@@ -2,22 +2,27 @@
   <el-container class="container">
     <el-main class="main">
       <el-row class="main-row">
-        <h1>{{ msg }}</h1>
+        <el-col class="title-col" :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
+          {{ msg }}
+        </el-col>
+        <el-col class="from-col" :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+          <el-form ref="from" :model="login" class="login-from">
+            <el-form-item class="from-label">
+              <el-input placeholder="请输入用户名" v-model="login.userName"></el-input>
+            </el-form-item>
+            <el-form-item class="from-label">
+              <el-input placeholder="请输入密码" v-model="login.passWord" show-password></el-input>
+            </el-form-item>
+            <el-form-item class="from-label">
+              <el-button type="primary" @click="onSubmit" class="login-button">登陆</el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col class="picture-col hidden-sm-and-down" h :md="24" :lg="24" :xl="24">
+          
+        </el-col>
       </el-row>
     </el-main>
-    <el-aside class="login-side">
-      <el-form ref="from" :model="login" class="login-from" label-width="50px">
-        <el-form-item label="用户" class="from-label">
-          <el-input placeholder="请输入用户名" v-model="login.userName"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" class="from-label">
-          <el-input placeholder="请输入密码" v-model="login.passWord" show-password></el-input>
-        </el-form-item>
-        <el-form-item class="from-label">
-          <el-button type="primary" @click="onSubmit" class="login-button">登陆</el-button>
-        </el-form-item>
-      </el-form>
-    </el-aside>
   </el-container>
 </template>
 
@@ -54,21 +59,36 @@
   .main{
     width: 100%;
     height: 100%;
+    padding: 0;
   }
   .main-row{
     height: 100%;
   }
-  .main-row>h1{
-    margin-top: 20%;
+  .title-col{
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    font-weight: bold;
   }
-  .login-side{
-    width: 400px !important;
-    margin: 50px;
+  .from-col{
+    height: 50%;
   }
   .login-from{
-    margin-top: 50%;
+    width: 100%;
+    height: 100%;
+    padding-top: 20px;
+  }
+  .login-from>.from-label{
+    margin-left: 10px;
+    margin-right: 10px;
   }
   .login-button{
     width: 100%;
+  }
+  .picture-col{
+    height: 50%;
+    background: #b5cbcd;
   }
 </style>
