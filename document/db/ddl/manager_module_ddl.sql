@@ -1,4 +1,7 @@
 # 配置、用户、角色、组织（喜好）
+drop table sys_config;
+drop table user_config;
+
 create table sys_config(
   config_key varchar(20) primary key not null comment '配置key',
   config_value varchar(20) not null comment '配置值',

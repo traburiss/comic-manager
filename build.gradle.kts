@@ -33,6 +33,8 @@ dependencies {
     implementation("io.springfox:springfox-swagger2:2.9.2")
     implementation("io.springfox:springfox-swagger-ui:2.9.2")
     implementation("com.alibaba:druid-spring-boot-starter:1.1.22")
+    implementation("com.alibaba:fastjson:1.2.68")
+    implementation("org.apache.commons:commons-lang3:3.10")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("mysql:mysql-connector-java")
