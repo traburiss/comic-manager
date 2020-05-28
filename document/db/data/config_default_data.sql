@@ -5,7 +5,7 @@ values
     ('expired_used', 'true', '是否使用登陆超时时间', '登陆过期时间，默认值为2个月', 1, 0),
     ('key', substring(md5(rand()),1,20), '加密用密钥', '加密用的密钥，不可修改', 0, 0);
 
-# 手动算好，密码的SHA256(真的密码+盐)
+# 手动算好，密码的SHA256(真的密码)
 insert into user_info (user_name, login_name, pass_word, salt, update_id)
 values ('system', 'system', ?, ?, 0);
 

@@ -36,11 +36,12 @@ create table user_info
 (
     id          bigint primary key auto_increment not null comment 'id',
     user_name   varchar(30)                       not null comment '用户名',
-    login_name  varchar(30)                       not null comment '登陆名',
+    login_name  varchar(30) unique                not null comment '登陆名',
     pass_word   varchar(65)                       not null comment '密码',
     salt        varchar(5)                        not null comment '加密的盐',
+    token       varchar(100) default null comment 'token,懒得弄redis',
     update_id   bigint                            not null comment '上次更新人的id，0为system',
-    update_time timestamp default current_timestamp on update current_timestamp comment '上次更新时间'
+    update_time timestamp    default current_timestamp on update current_timestamp comment '上次更新时间'
 ) engine = InnoDB comment '用户信息表';
 # 说实话一下表纯属无聊建着玩，系统本来不需要这么复杂的东西
 create table role_info

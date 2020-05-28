@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcl.comic.manager.mapper.UserMapper">
+    <resultMap id="user_info" type="com.tcl.comic.manager.entity.user.UserInfoDo">
+        <id property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="loginName" column="login_name"/>
+        <result property="passWord" column="pass_word"/>
+        <result property="salt" column="salt"/>
+        <result property="token" column="token"/>
+    </resultMap>
+    <select id="login" resultMap="user_info">
+        select *
+        from user_info
+        where login_name = #{loginName}
+          and pass_word = #{passWord}
+    </select>
+    <select id="checkToken" resultMap="user_info">
+        select *
+        from user_info
+        where token = #{token}
+    </select>
+    <update id="updateToken">
+        update user_info
+        set token = #{token}
+        where id = #{id}
+    </update>
+</mapper>

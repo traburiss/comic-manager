@@ -14,7 +14,9 @@ import reactor.core.publisher.Mono
 class FrontendFilter : WebFilter {
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         val path = exchange.request.uri.path
-        return if (!path.startsWith("/api") && path.matches(Regex("[^\\\\.]*"))) {
+        return if (!path.startsWith("/api") &&
+                path.startsWith("/swagger") &&
+                path.matches(Regex("[^\\\\.]*"))) {
             chain.filter(exchange.mutate().request(exchange.request.mutate().path("/index.html").build()).build())
         } else chain.filter(exchange)
     }
