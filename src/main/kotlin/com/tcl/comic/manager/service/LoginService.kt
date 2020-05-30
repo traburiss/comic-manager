@@ -3,9 +3,7 @@ package com.tcl.comic.manager.service
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
 import com.google.common.cache.LoadingCache
-import com.tcl.comic.manager.config.Constant.CONFIG_LOGIN_EXPIRED
 import com.tcl.comic.manager.entity.user.UserInfoDo
-import com.tcl.comic.manager.mapper.SysConfigMapper
 import com.tcl.comic.manager.mapper.UserMapper
 import com.tcl.comic.manager.utils.encrypt.utils.DesUtils
 import org.apache.commons.lang3.math.NumberUtils
@@ -22,12 +20,12 @@ import javax.annotation.PostConstruct
 class LoginService {
 
     @Autowired
-    lateinit var userMapper: UserMapper
+    private lateinit var userMapper: UserMapper
 
     @Autowired
-    lateinit var sysConfigMapper: SysConfigMapper
+    private lateinit var systemConfigService: SystemConfigService
 
-    lateinit var tokenCache: LoadingCache<String, Long>
+    private lateinit var tokenCache: LoadingCache<String, Long>
 
     @PostConstruct
     fun init() {
@@ -45,8 +43,8 @@ class LoginService {
 
     fun login(loginName: String, passWord: String): String {
         val userInfoDo: UserInfoDo? = userMapper.login(loginName, passWord) ?: return ""
-        val expired = NumberUtils.toLong(sysConfigMapper.getValue(CONFIG_LOGIN_EXPIRED))
-        val token = DesUtils.encrypt((System.currentTimeMillis() + expired).toString(), userInfoDo!!.loginName + userInfoDo.salt)
+        val expired = systemConfigService.loginExpire()
+        val token = DesUtils.encrypt((System.currentTimeMillis() + expired.toMillis()).toString(), userInfoDo!!.loginName + userInfoDo.salt)
         userMapper.updateToken(userInfoDo.id, token)
         return token
     }
@@ -55,6 +53,8 @@ class LoginService {
         val checkToken = tokenCache.get(token)
         return if (checkToken == null) {
             false
+        } else if (systemConfigService.useExpire()) {
+            true
         } else {
             checkToken > System.currentTimeMillis()
         }
