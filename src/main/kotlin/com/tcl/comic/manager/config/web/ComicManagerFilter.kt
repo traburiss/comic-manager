@@ -3,6 +3,7 @@ package com.tcl.comic.manager.config.web
 import com.tcl.comic.manager.config.Constant.COOKIES_TOKEN
 import com.tcl.comic.manager.config.Constant.CSS
 import com.tcl.comic.manager.config.Constant.FAVICON
+import com.tcl.comic.manager.config.Constant.FONTS
 import com.tcl.comic.manager.config.Constant.INDEX_PAGE
 import com.tcl.comic.manager.config.Constant.JS
 import com.tcl.comic.manager.config.Constant.LOGIN_API
@@ -67,6 +68,7 @@ class ComicManagerFilter : WebFilter {
             StringUtils.startsWith(path, LOGIN_PAGE) -> false
             StringUtils.startsWith(path, CSS) -> false
             StringUtils.startsWith(path, JS) -> false
+            StringUtils.startsWith(path, FONTS) -> false
             cookies == null -> true
             else -> {
                 val token = cookies[0].value

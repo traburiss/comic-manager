@@ -7,6 +7,7 @@ package com.tcl.comic.manager.config
 object Constant {
     const val CSS = "/css"
     const val JS = "/js"
+    const val FONTS = "/fonts"
     const val FAVICON = "/favicon.ico"
     const val INDEX_PAGE = "/index.html"
     const val LOGIN_PAGE = "/login"

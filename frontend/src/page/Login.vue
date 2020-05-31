@@ -45,8 +45,10 @@
     },
     methods:{
       onSubmit() {
+        this.$message.info("正在登陆")
         loginApi.login(this.login.userName, sha.sha256(this.login.passWord), () => {
-          window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/home')
+          this.$message.success("登陆成功")
+          this.$router.push('/home')
         })
         console.info(this.login)
       }

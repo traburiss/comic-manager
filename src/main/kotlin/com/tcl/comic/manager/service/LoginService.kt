@@ -44,19 +44,19 @@ class LoginService {
     fun login(loginName: String, passWord: String): String {
         val userInfoDo: UserInfoDo? = userMapper.login(loginName, passWord) ?: return ""
         val expired = systemConfigService.loginExpire()
-        val token = DesUtils.encrypt((System.currentTimeMillis() + expired.toMillis()).toString(), userInfoDo!!.loginName + userInfoDo.salt)
+        val expireTime = System.currentTimeMillis() + expired.toMillis()
+        val token = DesUtils.encrypt(expireTime.toString(), userInfoDo!!.loginName + userInfoDo.salt)
         userMapper.updateToken(userInfoDo.id, token)
+        tokenCache.put(token, expireTime)
         return token
     }
 
     fun tokenCheck(token: String): Boolean {
         val checkToken = tokenCache.get(token)
-        return if (checkToken == null) {
-            false
-        } else if (systemConfigService.useExpire()) {
-            true
-        } else {
-            checkToken > System.currentTimeMillis()
+        return when {
+            checkToken == null -> false
+            !systemConfigService.useExpire() -> true
+            else -> checkToken > System.currentTimeMillis()
         }
     }
 }
