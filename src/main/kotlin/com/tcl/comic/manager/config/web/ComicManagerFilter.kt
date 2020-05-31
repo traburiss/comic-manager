@@ -35,14 +35,8 @@ class ComicManagerFilter : WebFilter {
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         val path = exchange.request.uri.path
-        val url = exchange.request.uri
         if (need2login(exchange, chain)) {
-            val mutatedUri = URI(url.scheme, url.userInfo, url.host, url.port, LOGIN_PAGE, url.query, url.fragment)
-            val response = exchange.response
-            response.statusCode = HttpStatus.MOVED_PERMANENTLY
-            response.headers.location = mutatedUri
-            logger.info("login -> {}", path)
-            return Mono.empty()
+            return gotoLogin(exchange, chain)
         }
         return when {
             StringUtils.startsWith(path, "/api") -> {
@@ -81,4 +75,14 @@ class ComicManagerFilter : WebFilter {
         }
     }
 
+    fun gotoLogin(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        val url = exchange.request.uri
+        val path = exchange.request.uri.path
+        val mutatedUri = URI(url.scheme, url.userInfo, url.host, url.port, LOGIN_PAGE, url.query, url.fragment)
+        val response = exchange.response
+        response.statusCode = HttpStatus.MOVED_PERMANENTLY
+        response.headers.location = mutatedUri
+        logger.info("login -> {}", path)
+        return Mono.empty()
+    }
 }

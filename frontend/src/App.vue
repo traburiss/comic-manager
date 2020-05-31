@@ -1,20 +1,14 @@
 <template>
   <div id="app">
-    <LoginIn msg="welcome comic manager"/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import LoginIn from "@/components/LoginIn";
-
-export default {
-  name: 'App',
-  components: {
-      LoginIn
+  export default {
+    name: 'App',
   }
-}
 </script>
 
 <style>
-
 </style>

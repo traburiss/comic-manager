@@ -27,21 +27,27 @@
 </template>
 
 <script>
+  import loginApi from '../js/api/login'
+  import sha from 'js-sha256'
+  
   export default {
-    name: "LoginIn",
+    name: "Login",
     props: {
       msg: String
     },
-    data(){
-      return{
-        login:{
-          userName:'',
-          passWord:''
+    data() {
+      return {
+        login: {
+          userName: '',
+          passWord: ''
         }
       }
     },
     methods:{
-      onSubmit(){
+      onSubmit() {
+        loginApi.login(this.login.userName, sha.sha256(this.login.passWord), () => {
+          window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/home')
+        })
         console.info(this.login)
       }
     }
@@ -51,10 +57,6 @@
 <style scoped>
   h1 {
     text-align: center;
-  }
-  .container{
-    width: 100%;
-    height: 100%;
   }
   .main{
     width: 100%;

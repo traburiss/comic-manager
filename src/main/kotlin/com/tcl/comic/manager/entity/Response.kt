@@ -10,6 +10,7 @@ data class Response<T>(val code: Int = SUCCESS.code, val msg: String = SUCCESS.m
 enum class ResponseCode(val code: Int, val msg: String) {
     SUCCESS(200, "成功"),
     PARAM_ERROR(400, "参数异常"),
-    QUERY_ERROR(401, "请求错误"),
+    USER_ERROR(401, "用户未授权"),
+    QUERY_ERROR(402, "请求错误"),
     SERVER_ERROR(500, "服务器异常异常");
 }
