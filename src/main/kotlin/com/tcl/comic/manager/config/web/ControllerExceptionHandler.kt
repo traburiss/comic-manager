@@ -1,12 +1,21 @@
 package com.tcl.comic.manager.config.web
 
+import com.tcl.comic.manager.config.Constant.API
+import com.tcl.comic.manager.config.Constant.LOGIN_ID
+import com.tcl.comic.manager.config.Constant.LOGIN_NAME
 import com.tcl.comic.manager.entity.Response
 import com.tcl.comic.manager.entity.ResponseCode.PARAM_ERROR
+import com.tcl.comic.manager.service.LoginService
+import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.ServerWebInputException
 
 
@@ -16,8 +25,20 @@ import org.springframework.web.server.ServerWebInputException
  */
 @RestControllerAdvice
 class ControllerExceptionHandler {
-    private val logger = LoggerFactory.getLogger("ExceptionHandler")
-
+    private val logger = LoggerFactory.getLogger(this.javaClass)
+    @Autowired
+    private lateinit var loginService: LoginService;
+    
+    //TODO 全局添加用户名
+    @ModelAttribute
+    fun addAttributes(exchange: ServerWebExchange, model: Model) {
+        val path = exchange.request.uri.path
+        if (StringUtils.startsWith(path, API)){
+            model.addAttribute(LOGIN_NAME, "system")
+            model.addAttribute(LOGIN_ID, 1)
+        }
+    }
+    
     @ExceptionHandler(ServerWebInputException::class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     fun handleCustomException(e: Exception): Response<String> {

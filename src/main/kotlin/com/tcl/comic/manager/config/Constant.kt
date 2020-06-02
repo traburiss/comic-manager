@@ -5,12 +5,21 @@ package com.tcl.comic.manager.config
  * describe:
  */
 object Constant {
+    
+    const val LOGIN_NAME = "loginName"
+    const val LOGIN_ID = "loginId"
+    
+    const val API = "/api"
+    const val SWAGGER = "swagger"
+    const val API_DOC = "api-docs"
+    const val FRONTEND = "[^\\\\.]*"
     const val CSS = "/css"
     const val JS = "/js"
     const val FONTS = "/fonts"
     const val FAVICON = "/favicon.ico"
     const val INDEX_PAGE = "/index.html"
     const val LOGIN_PAGE = "/login"
+    const val HOME_PAGE = "/home"
     const val LOGIN_API = "/api/login"
 
     /**

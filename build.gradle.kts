@@ -32,7 +32,7 @@ dependencies {
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.2")
     implementation("org.springdoc:springdoc-openapi-webflux-ui:1.3.9")
     implementation("com.alibaba:druid-spring-boot-starter:1.1.22")
-    implementation("com.alibaba:fastjson:1.2.68")
+    implementation("com.alibaba:fastjson:1.2.70")
     implementation("org.apache.commons:commons-lang3:3.10")
     implementation("com.google.guava:guava:29.0-jre")
     compileOnly("org.projectlombok:lombok")

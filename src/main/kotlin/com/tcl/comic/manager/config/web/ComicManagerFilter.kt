@@ -1,25 +1,38 @@
 package com.tcl.comic.manager.config.web
 
+import com.alibaba.fastjson.JSON
+import com.tcl.comic.manager.config.Constant.API
+import com.tcl.comic.manager.config.Constant.API_DOC
 import com.tcl.comic.manager.config.Constant.COOKIES_TOKEN
 import com.tcl.comic.manager.config.Constant.CSS
 import com.tcl.comic.manager.config.Constant.FAVICON
 import com.tcl.comic.manager.config.Constant.FONTS
+import com.tcl.comic.manager.config.Constant.FRONTEND
+import com.tcl.comic.manager.config.Constant.HOME_PAGE
 import com.tcl.comic.manager.config.Constant.INDEX_PAGE
 import com.tcl.comic.manager.config.Constant.JS
 import com.tcl.comic.manager.config.Constant.LOGIN_API
 import com.tcl.comic.manager.config.Constant.LOGIN_PAGE
+import com.tcl.comic.manager.config.Constant.SWAGGER
+import com.tcl.comic.manager.entity.Response
+import com.tcl.comic.manager.entity.ResponseCode
 import com.tcl.comic.manager.service.LoginService
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.netty.ByteBufFlux
 import java.net.URI
+import java.nio.charset.StandardCharsets
+import java.util.*
 
 
 /**
@@ -29,7 +42,7 @@ import java.net.URI
 @Component
 class ComicManagerFilter : WebFilter {
 
-    val logger: Logger = LoggerFactory.getLogger("FrontendFilter")
+    val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
     lateinit var loginService: LoginService
@@ -37,18 +50,22 @@ class ComicManagerFilter : WebFilter {
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         val path = exchange.request.uri.path
         if (need2login(exchange, chain)) {
-            return gotoLogin(exchange, chain)
+            return if (StringUtils.startsWith(path, API)){
+                responseError(exchange, chain)
+            }else{
+                gotoLogin(exchange, chain)
+            }
         }
         return when {
-            StringUtils.startsWith(path, "/api") -> {
+            StringUtils.startsWith(path, API) -> {
                 logger.info("api -> {}", path)
                 chain.filter(exchange)
             }
-            StringUtils.contains(path, "swagger") || StringUtils.contains(path, "api-docs") -> {
+            StringUtils.contains(path, SWAGGER) || StringUtils.contains(path, API_DOC) -> {
                 logger.info("swagger -> {}", path)
                 chain.filter(exchange)
             }
-            path.matches(Regex("[^\\\\.]*")) -> {
+            path.matches(Regex(FRONTEND)) -> {
                 logger.info("front -> {}", path)
                 chain.filter(exchange.mutate().request(exchange.request.mutate().path(INDEX_PAGE).build()).build())
             }
@@ -85,6 +102,17 @@ class ComicManagerFilter : WebFilter {
         response.statusCode = HttpStatus.MOVED_PERMANENTLY
         response.headers.location = mutatedUri
         logger.info("login -> {}", path)
-        return Mono.empty()
+        return response.setComplete()
+    }
+    
+    fun responseError(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        val path = exchange.request.uri.path
+        val response = exchange.response
+        response.statusCode = HttpStatus.UNAUTHORIZED
+        response.headers.contentType = APPLICATION_JSON
+        response.headers.acceptCharset = Collections.singletonList(StandardCharsets.UTF_8)
+        val data = JSON.toJSONString(Response(ResponseCode.USER_ERROR.code, ResponseCode.USER_ERROR.msg, "请登陆")).toByteArray(Charsets.UTF_8)
+        logger.info("login -> {}", path)
+        return response.writeAndFlushWith(Flux.just(ByteBufFlux.just(response.bufferFactory().wrap(data))))
     }
 }

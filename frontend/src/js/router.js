@@ -4,6 +4,7 @@ import ERROR from "@/page/ERROR";
 
 export default {
   routers: [
+    {path: '', redirect: '/home'},
     {path: '/', redirect: '/home'},
     {path: '/home', component: Home},
     {path: '/login', component: Login},

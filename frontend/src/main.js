@@ -13,7 +13,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
-  base: __dirname,
+  base: '/',
   routes: routers.routers
 })
 // eslint-disable-next-line no-unused-vars
