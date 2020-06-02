@@ -1,14 +1,5 @@
 # 配置、用户、角色、组织（喜好）
 drop table if exists sys_config;
-drop table if exists user_config;
-drop table if exists user_info;
-drop table if exists role_info;
-drop table if exists interest_group;
-drop table if exists menu_info;
-drop table if exists user_role_map;
-drop table if exists role_menu_map;
-drop table if exists user_interest_map;
-
 create table sys_config
 (
     config_key   varchar(20) primary key not null comment '配置key',
@@ -20,6 +11,7 @@ create table sys_config
     update_time  timestamp                        default current_timestamp on update current_timestamp comment '上次更新时间'
 ) engine = InnoDB comment '系统配置信息表(其实把参数表也放进来了)';
 
+drop table if exists user_config;
 create table user_config
 (
     id           bigint primary key auto_increment not null comment 'id',
@@ -30,8 +22,9 @@ create table user_config
     config_desc  varchar(100)                      not null comment '配置说明',
     update_id    bigint                            not null comment '上次更新人的id，0为system',
     update_time  timestamp default current_timestamp on update current_timestamp comment '上次更新时间'
-) engine = InnoDB comment '用户配置信息表';
+) engine = InnoDB comment '用户配置信息表，我怀疑这张表根本用不上，看我之后想不想加例如主题之类的东西吧';
 
+drop table if exists user_info;
 create table user_info
 (
     id          bigint primary key auto_increment not null comment 'id',
@@ -43,6 +36,8 @@ create table user_info
     update_id   bigint                            not null comment '上次更新人的id，0为system',
     update_time timestamp    default current_timestamp on update current_timestamp comment '上次更新时间'
 ) engine = InnoDB comment '用户信息表';
+
+drop table if exists role_info;
 # 说实话一下表纯属无聊建着玩，系统本来不需要这么复杂的东西
 create table role_info
 (
@@ -53,15 +48,7 @@ create table role_info
     update_time timestamp default current_timestamp on update current_timestamp comment '上次更新时间'
 ) engine = InnoDB comment '角色表';
 
-create table interest_group
-(
-    id          bigint primary key auto_increment not null comment 'id',
-    group_name  varchar(30)                       not null comment '圈子名称',
-    group_desc  varchar(60)                       not null comment '圈子说明',
-    update_id   bigint                            not null comment '上次更新人的id，0为system',
-    update_time timestamp default current_timestamp on update current_timestamp comment '上次更新时间'
-) engine = InnoDB comment '圈子表';
-
+drop table if exists menu_info;
 create table menu_info
 (
     id          bigint primary key not null comment 'id',
@@ -72,20 +59,16 @@ create table menu_info
     update_time timestamp default current_timestamp on update current_timestamp comment '上次更新时间'
 ) engine = InnoDB comment '目录表';
 
+drop table if exists user_role_map;
 create table user_role_map
 (
     user_id bigint not null comment 'user_info的id',
     role_id bigint not null comment 'user_info的id'
 ) engine = InnoDB comment '用户角色关联表';
 
+drop table if exists role_menu_map;
 create table role_menu_map
 (
     role_id bigint not null comment 'user_info的id',
     menu_id bigint not null comment 'menu_info的id'
 ) engine = InnoDB comment '角色目录关联表';
-
-create table user_interest_map
-(
-    user_id     bigint not null comment 'user_info的id',
-    interest_id bigint not null comment 'interest的id'
-) engine = InnoDB comment '用户兴趣关联表';
