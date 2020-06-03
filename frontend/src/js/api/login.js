@@ -5,7 +5,7 @@ export default {
 }
 
 function loginRequest(loginName, passWord, success) {
-  return service.post('api/login/login', {
+  return service.post('api/user/login', {
     loginName: loginName,
     passWord: passWord,
   }, success);

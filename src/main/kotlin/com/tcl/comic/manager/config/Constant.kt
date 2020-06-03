@@ -20,7 +20,8 @@ object Constant {
     const val INDEX_PAGE = "/index.html"
     const val LOGIN_PAGE = "/login"
     const val HOME_PAGE = "/home"
-    const val LOGIN_API = "/api/login"
+    const val LOGIN_API = "/api/user/login"
+    const val LOGOUT_API = "/api/user/logout"
 
     /**
      * token的key

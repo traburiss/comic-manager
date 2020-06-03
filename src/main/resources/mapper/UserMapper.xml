@@ -25,4 +25,9 @@
         set token = #{token}
         where id = #{id}
     </update>
+    <update id="deleteToken">
+        update user_info
+        set token = null
+        where id = #{id}
+    </update>
 </mapper>

@@ -5,6 +5,7 @@ import com.tcl.comic.manager.config.Constant.LOGIN_ID
 import com.tcl.comic.manager.config.Constant.LOGIN_NAME
 import com.tcl.comic.manager.entity.Response
 import com.tcl.comic.manager.entity.ResponseCode.PARAM_ERROR
+import com.tcl.comic.manager.entity.ResponseCode.SERVER_ERROR
 import com.tcl.comic.manager.service.LoginService
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
@@ -38,11 +39,18 @@ class ControllerExceptionHandler {
             model.addAttribute(LOGIN_ID, 1)
         }
     }
-    
+
     @ExceptionHandler(ServerWebInputException::class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     fun handleCustomException(e: Exception): Response<String> {
         logger.error("参数错误", e)
         return Response(PARAM_ERROR.code, PARAM_ERROR.msg + ":" + e.message, "")
+    }
+
+    @ExceptionHandler(Exception::class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    fun handleException(e: Exception): Response<String> {
+        logger.error("未知错误", e)
+        return Response(SERVER_ERROR.code, SERVER_ERROR.msg, e.message.toString())
     }
 }

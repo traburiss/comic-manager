@@ -50,7 +50,6 @@
           this.$message.success("登陆成功")
           this.$router.push('/home')
         })
-        console.info(this.login)
       }
     }
   }

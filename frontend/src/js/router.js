@@ -1,6 +1,6 @@
 import Home from "@/page/Home";
 import Login from "@/page/Login";
-import ERROR from "@/page/ERROR";
+import Error from "@/page/Error";
 
 export default {
   routers: [
@@ -8,7 +8,7 @@ export default {
     {path: '/', redirect: '/home'},
     {path: '/home', component: Home},
     {path: '/login', component: Login},
-    {path: '/404', component: ERROR},
+    {path: '/404', component: Error},
     {path: '/*', redirect: '/404'}
   ]
 }

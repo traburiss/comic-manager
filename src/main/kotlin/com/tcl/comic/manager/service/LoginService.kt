@@ -59,4 +59,10 @@ class LoginService {
             else -> checkToken > System.currentTimeMillis()
         }
     }
+
+    fun logout(id: Int, token: String): Boolean {
+        userMapper.deleteToken(id)
+        tokenCache.refresh(token)
+        return true
+    }
 }

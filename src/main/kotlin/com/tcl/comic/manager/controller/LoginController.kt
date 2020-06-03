@@ -1,6 +1,9 @@
 package com.tcl.comic.manager.controller
 
 import com.tcl.comic.manager.config.Constant.COOKIES_TOKEN
+import com.tcl.comic.manager.config.Constant.LOGIN_API
+import com.tcl.comic.manager.config.Constant.LOGIN_ID
+import com.tcl.comic.manager.config.Constant.LOGOUT_API
 import com.tcl.comic.manager.entity.Response
 import com.tcl.comic.manager.entity.ResponseCode.QUERY_ERROR
 import com.tcl.comic.manager.entity.user.LoginRequestVO
@@ -11,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseCookie
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ServerWebExchange
 
@@ -20,7 +24,6 @@ import org.springframework.web.server.ServerWebExchange
  * describe:
  */
 @RestController
-@RequestMapping("/api/login")
 @Tag(name = "LoginController", description = "登陆接口")
 class LoginController {
 
@@ -31,7 +34,7 @@ class LoginController {
     lateinit var systemConfigService: SystemConfigService
 
     @Operation(summary = "登陆")
-    @PostMapping("/login")
+    @PostMapping(LOGIN_API)
     fun login(@RequestBody loginRequest: LoginRequestVO, exchange: ServerWebExchange): Response<String> {
         loginService.login(loginRequest.loginName, loginRequest.passWord);
         val token = loginService.login(loginRequest.loginName, loginRequest.passWord);
@@ -49,13 +52,27 @@ class LoginController {
     }
 
     @Operation(summary = "检查token")
-    @GetMapping("/token/check")
-    fun tokenCheck(@RequestParam("token") loginName: String): Response<Boolean> {
-        val success = loginService.tokenCheck(loginName)
+    @GetMapping("/api/token/check")
+    fun tokenCheck(@RequestParam("token") token: String): Response<Boolean> {
+        val success = loginService.tokenCheck(token)
         return if (success) {
             Response(data = success)
         } else {
             Response(QUERY_ERROR.code, "校验token失败，你还未登录", success)
+        }
+    }
+
+    @Operation(summary = "登出")
+    @GetMapping(LOGOUT_API)
+    fun logout(model: Model, exchange: ServerWebExchange): Response<Boolean> {
+        val id = model.getAttribute(LOGIN_ID)
+        val cookie = exchange.response.cookies[COOKIES_TOKEN]
+        return if (id is Int && cookie != null) {
+            val token = cookie[0].value
+            loginService.logout(id, token)
+            Response(QUERY_ERROR.code, "登出成功", true)
+        } else {
+            Response(QUERY_ERROR.code, "你还未登录", false)
         }
     }
 }
