@@ -1,22 +1,22 @@
 <template>
   <el-container class="container">
-    <el-header class="header">
+    <el-header class="header" height="30px">
       <el-menu :default-active="activeIndex" mode="horizontal" :router="true">
-        <el-menu-item index="search">搜索</el-menu-item>
-        <el-menu-item index="comic">漫画</el-menu-item>
-        <el-menu-item index="series">系列</el-menu-item>
-        <el-menu-item index="interest">兴趣</el-menu-item>
+        <el-submenu index="myself" :show-timeout="100" :hide-timeout="100">
+          <template slot="title">我</template>
+          <el-menu-item index="me">我</el-menu-item>
+          <el-menu-item class="logout" @click="logout">登出</el-menu-item>
+        </el-submenu>
         <el-submenu index="manager" :show-timeout="100" :hide-timeout="100">
           <template slot="title">管理</template>
           <el-menu-item index="user">用户</el-menu-item>
           <el-menu-item index="role">角色</el-menu-item>
           <el-menu-item index="config">配置</el-menu-item>
         </el-submenu>
-        <el-submenu index="myself" :show-timeout="100" :hide-timeout="100">
-          <template slot="title">我</template>
-          <el-menu-item index="me">我</el-menu-item>
-          <el-menu-item class="logout" @click="logout">登出</el-menu-item>
-        </el-submenu>
+        <el-menu-item index="interest">兴趣</el-menu-item>
+        <el-menu-item index="series">系列</el-menu-item>
+        <el-menu-item index="comic">漫画</el-menu-item>
+        <el-menu-item index="search">搜索</el-menu-item>
       </el-menu>
     </el-header>
     <el-main class="main">
@@ -72,6 +72,7 @@
     width: 100%;
     padding: 0;
     background: #65686a;
+    text-align: end;
   }
 
   .container > .main {
@@ -92,5 +93,20 @@
 
   .logout:active {
     color: #dd6161 !important;
+  }
+
+  .el-menu--horizontal > .el-menu-item {
+    float: right;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  .el-menu--horizontal > .el-submenu {
+    float: right;
+  }
+
+  .el-menu--horizontal > .el-submenu .el-submenu__title {
+    height: 30px;
+    line-height: 30px;
   }
 </style>
