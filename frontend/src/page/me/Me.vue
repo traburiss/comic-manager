@@ -1,9 +1,13 @@
 <template>
-  <h1>404</h1>
+  <h1>this me</h1>
 </template>
 
 <script>
   export default {
-    name: "Error"
+    name: "Me"
   }
 </script>
+
+<style scoped>
+
+</style>

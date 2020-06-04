@@ -1,9 +1,13 @@
 <template>
-  <h1>404</h1>
+  <h1>Role</h1>
 </template>
 
 <script>
   export default {
-    name: "Error"
+    name: "RoleManager"
   }
 </script>
+
+<style scoped>
+
+</style>
