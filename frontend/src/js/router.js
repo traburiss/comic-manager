@@ -4,7 +4,7 @@ import Error from "@/page/Error";
 import Search from "@/page/search/Search";
 import ComicManager from "@/page/comic/manager/ComicManager";
 import SeriesManager from "@/page/comic/series/SeriesManager";
-import Interest from "@/page/manager/interest/Interest";
+import Library from "@/page/comic/library/Library";
 import UserManager from "@/page/manager/user/UserManager";
 import RoleManager from "@/page/manager/role/RoleManager";
 import ConfigManager from "@/page/manager/config/ConfigManager";
@@ -34,8 +34,8 @@ export default {
           component: SeriesManager
         },
         {
-          path: 'interest',
-          component: Interest
+          path: 'library',
+          component: Library
         },
         {
           path: 'user',

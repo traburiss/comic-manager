@@ -13,6 +13,7 @@
     "element-ui": "^2.13.2",
     "js-sha256": "^0.9.0",
     "vue": "^2.6.11",
+    "vue-cookies": "^1.7.0",
     "vue-router": "^3.3.2"
   },
   "devDependencies": {

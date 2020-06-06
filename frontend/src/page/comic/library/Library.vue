@@ -1,10 +1,10 @@
 <template>
-  <h1>因吹斯听</h1>
+  <h1>因吹斯听(划掉) library</h1>
 </template>
 
 <script>
   export default {
-    name: "Interest"
+    name: "Library"
   }
 </script>
 

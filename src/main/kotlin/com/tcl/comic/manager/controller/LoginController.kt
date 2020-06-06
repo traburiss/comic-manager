@@ -6,6 +6,7 @@ import com.tcl.comic.manager.config.Constant.LOGIN_ID
 import com.tcl.comic.manager.config.Constant.LOGOUT_API
 import com.tcl.comic.manager.entity.Response
 import com.tcl.comic.manager.entity.ResponseCode.QUERY_ERROR
+import com.tcl.comic.manager.entity.ResponseCode.SUCCESS
 import com.tcl.comic.manager.entity.user.LoginRequestVO
 import com.tcl.comic.manager.service.LoginService
 import com.tcl.comic.manager.service.SystemConfigService
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
@@ -63,15 +65,16 @@ class LoginController {
     }
 
     @Operation(summary = "登出")
-    @GetMapping(LOGOUT_API)
+    @PostMapping(LOGOUT_API)
     fun logout(model: Model, exchange: ServerWebExchange): Response<Boolean> {
         val id = model.getAttribute(LOGIN_ID)
-        val cookie = exchange.response.cookies[COOKIES_TOKEN]
+        val cookie = exchange.request.cookies[COOKIES_TOKEN]
         return if (id is Int && cookie != null) {
             val token = cookie[0].value
             loginService.logout(id, token)
-            Response(QUERY_ERROR.code, "登出成功", true)
+            Response(SUCCESS.code, "登出成功", true)
         } else {
+            exchange.response.statusCode = HttpStatus.UNAUTHORIZED
             Response(QUERY_ERROR.code, "你还未登录", false)
         }
     }

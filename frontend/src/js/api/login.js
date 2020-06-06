@@ -1,12 +1,17 @@
 import service from "./service";
 
 export default {
-  login: loginRequest
+  login: loginRequest,
+  logout: loginOut
 }
 
 function loginRequest(loginName, passWord, success) {
-  return service.post('api/user/login', {
+  return service.post('/user/login', {
     loginName: loginName,
     passWord: passWord,
   }, success);
+}
+
+function loginOut(success, error) {
+  return service.post('/user/logout', {}, success, error);
 }

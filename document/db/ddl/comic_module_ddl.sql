@@ -1,7 +1,7 @@
-#兴趣圈，漫画，漫画系列，漫画标签表
+#书库，漫画，漫画系列，漫画标签表
 
-drop table if exists interest_group;
-create table interest_group
+drop table if exists library;
+create table library
 (
     id            bigint primary key auto_increment not null comment 'id',
     group_name    varchar(30)                       not null comment '圈子名称',
@@ -11,14 +11,14 @@ create table interest_group
     library_param varchar(512)                      not null comment '书库参数',
     update_id     bigint                            not null comment '上次更新人的id，0为system',
     update_time   timestamp default current_timestamp on update current_timestamp comment '上次更新时间'
-) engine = InnoDB comment '圈子表';
+) engine = InnoDB comment '书库表';
 
-drop table if exists user_interest_map;
-create table user_interest_map
+drop table if exists user_library_map;
+create table user_library_map
 (
-    user_id     bigint not null comment 'user_info的id',
-    interest_id bigint not null comment 'interest的id'
-) engine = InnoDB comment '用户兴趣关联表';
+    user_id    bigint not null comment 'user_info的id',
+    library_id bigint not null comment 'library_的id'
+) engine = InnoDB comment '用户书库关联表';
 
 drop table if exists comic_series;
 create table comic_series

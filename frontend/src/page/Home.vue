@@ -13,7 +13,7 @@
           <el-menu-item index="role">角色</el-menu-item>
           <el-menu-item index="config">配置</el-menu-item>
         </el-submenu>
-        <el-menu-item index="interest">兴趣</el-menu-item>
+        <el-menu-item index="library">书库</el-menu-item>
         <el-menu-item index="series">系列</el-menu-item>
         <el-menu-item index="comic">漫画</el-menu-item>
         <el-menu-item index="search">搜索</el-menu-item>
@@ -26,6 +26,10 @@
 </template>
 
 <script>
+  import login from "@/js/api/login";
+  import loading from "@/js/common/loading";
+  import cookie from "@/js/common/cookie";
+  
   export default {
     name: "Home",
     data() {
@@ -42,16 +46,25 @@
           showClose: false,
           confirmButtonClass: 'el-button--danger'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '开始登出!'
-          });
+          loading.start("正在登出")
+          login.logout(() => {
+            this.logoutFinish()
+          }, () => {
+            loading.stop()
+            this.$message({type: 'warn', message: '登出失败'})
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消'
           });
         });
+      },
+      logoutFinish() {
+        loading.stop()
+        this.$cookies.remove(cookie.token, "/")
+        this.$router.push('/login')
+        this.$message({message: '已登出!'});
       }
     },
     mounted() {
