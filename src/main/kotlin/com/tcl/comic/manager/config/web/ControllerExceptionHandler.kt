@@ -1,5 +1,6 @@
 package com.tcl.comic.manager.config.web
 
+import com.tcl.comic.manager.config.Constant
 import com.tcl.comic.manager.config.Constant.API
 import com.tcl.comic.manager.config.Constant.LOGIN_ID
 import com.tcl.comic.manager.config.Constant.LOGIN_NAME
@@ -30,13 +31,19 @@ class ControllerExceptionHandler {
     @Autowired
     private lateinit var loginService: LoginService;
     
-    //TODO 全局添加用户名
     @ModelAttribute
     fun addAttributes(exchange: ServerWebExchange, model: Model) {
         val path = exchange.request.uri.path
-        if (StringUtils.startsWith(path, API)){
-            model.addAttribute(LOGIN_NAME, "system")
-            model.addAttribute(LOGIN_ID, 1)
+        if (StringUtils.startsWith(path, API)) {
+            val cookies = exchange.request.cookies[Constant.COOKIES_TOKEN]
+            if (cookies != null) {
+                val token = cookies[0].value
+                val userInfo = loginService.tokenGetUserData(token)
+                if (userInfo != null) {
+                    model.addAttribute(LOGIN_NAME, userInfo.loginName)
+                    model.addAttribute(LOGIN_ID, userInfo.id)
+                }
+            }
         }
     }
 

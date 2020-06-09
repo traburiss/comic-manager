@@ -8,7 +8,6 @@ import com.tcl.comic.manager.config.Constant.CSS
 import com.tcl.comic.manager.config.Constant.FAVICON
 import com.tcl.comic.manager.config.Constant.FONTS
 import com.tcl.comic.manager.config.Constant.FRONTEND
-import com.tcl.comic.manager.config.Constant.HOME_PAGE
 import com.tcl.comic.manager.config.Constant.INDEX_PAGE
 import com.tcl.comic.manager.config.Constant.JS
 import com.tcl.comic.manager.config.Constant.LOGIN_API
@@ -58,19 +57,19 @@ class ComicManagerFilter : WebFilter {
         }
         return when {
             StringUtils.startsWith(path, API) -> {
-                logger.info("api -> {}", path)
+                logger.debug("api -> {}", path)
                 chain.filter(exchange)
             }
             StringUtils.contains(path, SWAGGER) || StringUtils.contains(path, API_DOC) -> {
-                logger.info("swagger -> {}", path)
+                logger.debug("swagger -> {}", path)
                 chain.filter(exchange)
             }
             path.matches(Regex(FRONTEND)) -> {
-                logger.info("front -> {}", path)
+                logger.debug("front -> {}", path)
                 chain.filter(exchange.mutate().request(exchange.request.mutate().path(INDEX_PAGE).build()).build())
             }
             else -> {
-                logger.info("else -> {}", path)
+                logger.debug("else -> {}", path)
                 chain.filter(exchange)
             }
         }
@@ -101,7 +100,7 @@ class ComicManagerFilter : WebFilter {
         val response = exchange.response
         response.statusCode = HttpStatus.MOVED_PERMANENTLY
         response.headers.location = mutatedUri
-        logger.info("login -> {}", path)
+        logger.debug("login -> {}", path)
         return response.setComplete()
     }
     
@@ -112,7 +111,7 @@ class ComicManagerFilter : WebFilter {
         response.headers.contentType = APPLICATION_JSON
         response.headers.acceptCharset = Collections.singletonList(StandardCharsets.UTF_8)
         val data = JSON.toJSONString(Response(ResponseCode.USER_ERROR.code, ResponseCode.USER_ERROR.msg, "请登陆")).toByteArray(Charsets.UTF_8)
-        logger.info("login -> {}", path)
+        logger.debug("login -> {}", path)
         return response.writeAndFlushWith(Flux.just(ByteBufFlux.just(response.bufferFactory().wrap(data))))
     }
 }

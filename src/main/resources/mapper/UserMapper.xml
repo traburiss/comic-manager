@@ -26,7 +26,7 @@
         where login_name = #{loginName}
           and pass_word = #{passWord}
     </select>
-    <select id="checkToken" resultMap="user_info">
+    <select id="tokenGetData" resultMap="user_info">
         select *
         from user_info
         where token = #{token}
