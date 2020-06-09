@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: "ComicRead"
+    name: 'ComicRead'
   }
 </script>
 

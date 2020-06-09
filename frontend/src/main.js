@@ -7,7 +7,8 @@ import VueRouter from 'vue-router'
 import VueCookies from 'vue-cookies'
 import routers from '@/js/router'
 import App from '@/App'
-import cookie from "@/js/common/cookie";
+import cookie from '@/js/common/cookie';
+import {global} from '@/store';
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
@@ -22,11 +23,12 @@ const router = new VueRouter({
 // eslint-disable-next-line no-unused-vars
 const app = new Vue({
   render: h => h(App),
+  store: global,
   router: router,
 }).$mount('#app')
 router.beforeEach((to, from, next) => {
   if (!isLogin() && to.path !== '/login') {
-    app.$message.error("您还没有登陆，请重新登陆")
+    app.$message.error('您还没有登陆，请重新登陆')
     next('/login')
   } else {
     next()

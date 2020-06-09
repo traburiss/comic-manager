@@ -1,15 +1,15 @@
-import Home from "@/page/Home";
-import Login from "@/page/Login";
-import Error from "@/page/Error";
-import Search from "@/page/search/Search";
-import ComicManager from "@/page/comic/manager/ComicManager";
-import SeriesManager from "@/page/comic/series/SeriesManager";
-import Library from "@/page/comic/library/Library";
-import UserManager from "@/page/manager/user/UserManager";
-import RoleManager from "@/page/manager/role/RoleManager";
-import ConfigManager from "@/page/manager/config/ConfigManager";
-import Me from "@/page/me/Me";
-import ComicRead from "@/page/comic/read/ComicRead";
+import Home from '@/page/Home';
+import Login from '@/page/Login';
+import Error from '@/page/Error';
+import Search from '@/page/search/Search';
+import ComicManager from '@/page/comic/manager/ComicManager';
+import SeriesManager from '@/page/comic/series/SeriesManager';
+import Library from '@/page/comic/library/Library';
+import UserManager from '@/page/manager/user/UserManager';
+import RoleManager from '@/page/manager/role/RoleManager';
+import ConfigManager from '@/page/manager/config/ConfigManager';
+import Me from '@/page/me/Me';
+import ComicRead from '@/page/comic/read/ComicRead';
 
 export default {
   routers: [

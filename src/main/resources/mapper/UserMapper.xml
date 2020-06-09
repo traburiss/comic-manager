@@ -9,6 +9,17 @@
         <result property="salt" column="salt"/>
         <result property="token" column="token"/>
     </resultMap>
+    <resultMap id="user_data" type="com.tcl.comic.manager.entity.user.UserDataVO">
+        <result property="userName" column="user_name"/>
+        <result property="loginName" column="login_name"/>
+        <result property="roleName" column="role_name"/>
+        <collection property="menuList" ofType="com.tcl.comic.manager.entity.user.MenuInfo" resultMap="menu_info"/>
+    </resultMap>
+    <resultMap id="menu_info" type="com.tcl.comic.manager.entity.user.MenuInfo">
+        <result property="menuName" column="menu_name"/>
+        <result property="menuDesc" column="menu_desc"/>
+        <result property="menuCode" column="menu_code"/>
+    </resultMap>
     <select id="login" resultMap="user_info">
         select *
         from user_info
@@ -30,4 +41,13 @@
         set token = null
         where id = #{id}
     </update>
+    <select id="userData" resultMap="user_data">
+        select ui.user_name, ui.login_name, ri.role_name, mi.menu_name, mi.menu_desc, mi.menu_code
+        from user_info ui
+                 left join user_role_map urm on urm.user_id = ui.id
+                 left join role_info ri on ri.id = urm.role_id
+                 left join role_menu_map rmm on rmm.role_id = urm.role_id
+                 left join menu_info mi on mi.id = rmm.menu_id
+        where ui.id = #{id}
+    </select>
 </mapper>

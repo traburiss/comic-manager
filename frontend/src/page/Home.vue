@@ -1,37 +1,38 @@
 <template>
-  <el-container class="container">
-    <el-header class="header" height="30px">
-      <el-menu :default-active="activeIndex" mode="horizontal" :router="true">
-        <el-submenu index="myself" :show-timeout="100" :hide-timeout="100">
-          <template slot="title">我</template>
-          <el-menu-item index="me">我</el-menu-item>
-          <el-menu-item class="logout" @click="logout">登出</el-menu-item>
+  <el-container class='container'>
+    <el-header class='header' height='30px'>
+      <el-menu :default-active='activeIndex' mode='horizontal' :router='true'>
+        <el-submenu index='myself' :show-timeout='100' :hide-timeout='100'>
+          <template slot='title'>我</template>
+          <el-menu-item index='me'>{{userData.userName}}</el-menu-item>
+          <el-menu-item class='logout' @click='logout'>登出</el-menu-item>
         </el-submenu>
-        <el-submenu index="manager" :show-timeout="100" :hide-timeout="100">
-          <template slot="title">管理</template>
-          <el-menu-item index="user">用户</el-menu-item>
-          <el-menu-item index="role">角色</el-menu-item>
-          <el-menu-item index="config">配置</el-menu-item>
+        <el-submenu v-if='menuList.includes("user")' index='manager' :show-timeout='100' :hide-timeout='100'>
+          <template slot='title'>管理</template>
+          <el-menu-item v-if='menuList.includes("user")' index='user'>用户</el-menu-item>
+          <el-menu-item v-if='menuList.includes("user")' index='role'>角色</el-menu-item>
+          <el-menu-item v-if='menuList.includes("user")' index='library'>书库</el-menu-item>
+          <el-menu-item v-if='menuList.includes("user")' index='config'>配置</el-menu-item>
         </el-submenu>
-        <el-menu-item index="library">书库</el-menu-item>
-        <el-menu-item index="series">系列</el-menu-item>
-        <el-menu-item index="comic">漫画</el-menu-item>
-        <el-menu-item index="search">搜索</el-menu-item>
+        <el-menu-item v-if='menuList.includes("user")' index='series'>系列</el-menu-item>
+        <el-menu-item v-if='menuList.includes("user")' index='comic'>漫画</el-menu-item>
+        <el-menu-item v-if='menuList.includes("user")' index='search'>搜索</el-menu-item>
       </el-menu>
     </el-header>
-    <el-main class="main">
+    <el-main class='main'>
       <router-view></router-view>
     </el-main>
   </el-container>
 </template>
 
 <script>
-  import login from "@/js/api/login";
-  import loading from "@/js/common/loading";
-  import cookie from "@/js/common/cookie";
+  import api from '@/js/api/login'
+  import loading from '@/js/common/loading';
+  import cookie from '@/js/common/cookie';
+  import {UPDATE_USER_DATA} from '@/store'
   
   export default {
-    name: "Home",
+    name: 'Home',
     data() {
       return {
         activeIndex: 'search'
@@ -46,8 +47,8 @@
           showClose: false,
           confirmButtonClass: 'el-button--danger'
         }).then(() => {
-          loading.start("正在登出")
-          login.logout(() => {
+          loading.start('正在登出')
+          api.logoutService(() => {
             this.logoutFinish()
           }, () => {
             loading.stop()
@@ -62,14 +63,22 @@
       },
       logoutFinish() {
         loading.stop()
-        this.$cookies.remove(cookie.token, "/")
+        this.$cookies.remove(cookie.token, '/')
         this.$router.push('/login')
         this.$message({message: '已登出!'});
       }
     },
+    computed: {
+      userData() {
+        return this.$store.state.userData
+      },
+      menuList() {
+        return this.$store.state.menuList
+      }
+    },
     mounted() {
-      console.info(this.$route.path)
-      this.activeIndex = this.$route.path.replace("/home/", "")
+      this.activeIndex = this.$route.path.replace('/home/', '')
+      this.$store.commit(UPDATE_USER_DATA)
     }
   }
 </script>

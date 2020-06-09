@@ -11,6 +11,8 @@ export default {
     })
   },
   stop: () => {
-    loadingInstance.close()
+    if (loadingInstance) {
+      loadingInstance.close()
+    }
   }
 }

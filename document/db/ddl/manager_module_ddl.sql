@@ -54,7 +54,7 @@ create table menu_info
     id          bigint primary key not null comment 'id',
     menu_name   varchar(30)        not null comment '目录名称',
     menu_desc   varchar(60)        not null comment '目录说明',
-    menu_sort   mediumint          not null comment '目录排序',
+    menu_code   varchar(30)        not null comment '目录编码',
     update_id   bigint             not null comment '上次更新人的id，0为system',
     update_time timestamp default current_timestamp on update current_timestamp comment '上次更新时间'
 ) engine = InnoDB comment '目录表';

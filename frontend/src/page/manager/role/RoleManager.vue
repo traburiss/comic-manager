@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: "RoleManager"
+    name: 'RoleManager'
   }
 </script>
 

@@ -1,5 +1,6 @@
 package com.tcl.comic.manager.mapper
 
+import com.tcl.comic.manager.entity.user.UserDataVO
 import com.tcl.comic.manager.entity.user.UserInfoDo
 import org.apache.ibatis.annotations.Param
 import org.springframework.stereotype.Repository
@@ -14,4 +15,5 @@ interface UserMapper {
     fun checkToken(@Param("token") token: String): UserInfoDo?
     fun updateToken(@Param("id") id: Int, @Param("token") token: String)
     fun deleteToken(@Param("id") id: Int)
+    fun userData(@Param("id") id: Int): UserDataVO
 }

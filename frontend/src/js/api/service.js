@@ -1,14 +1,14 @@
-import axios from "axios";
+import axios from 'axios';
 import {Message} from 'element-ui';
-import main from "@/main";
-import loading from "@/js/common/loading";
-import cookie from "@/js/common/cookie";
+import main from '@/main';
+import loading from '@/js/common/loading';
+import cookie from '@/js/common/cookie';
 
 axios.defaults.baseURL = '/api';
 export default {
-  post(url, params, success, error) {
+  service(url, method, params, success, error) {
     return axios({
-      method: "post",
+      method: method,
       url,
       data: params
     }).then(function (res) {
@@ -31,7 +31,7 @@ export default {
       try {
         if (err.response.status === 401) {
           loading.stop()
-          main.app.$cookies.remove(cookie.token, "/")
+          main.app.$cookies.remove(cookie.token, '/')
           Message.error('你还未登陆，请先登陆')
           main.app.$router.push('/login')
         } else {
@@ -58,5 +58,11 @@ export default {
         }
       }
     })
+  },
+  post(url, params, success, error) {
+    return this.service(url, 'post', params, success, error)
+  },
+  get(url, params, success, error) {
+    return this.service(url, 'get', params, success, error)
   }
 }
