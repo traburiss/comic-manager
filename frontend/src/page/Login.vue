@@ -28,7 +28,6 @@
 
 <script>
   import api from '../js/api/login'
-  import sha from 'js-sha256'
   
   export default {
     name: 'Login',
@@ -46,7 +45,7 @@
     methods:{
       onSubmit() {
         this.$message.info('正在登陆')
-        api.loginService(this.login.userName, sha.sha256(this.login.passWord), () => {
+        api.loginService(this.login.userName, this.login.passWord).then(() => {
           this.$message.success('登陆成功')
           this.$router.push('/home')
         })

@@ -1,13 +1,14 @@
-import service from './service';
+import service from './base/service';
+import sha from "js-sha256";
 
 export default {
-  loginService(loginName, passWord, success) {
+  loginService(loginName, passWord) {
     return service.post('/user/login', {
       loginName: loginName,
-      passWord: passWord,
-    }, success);
+      passWord: sha.sha256(passWord),
+    });
   },
-  logoutService(success, error) {
-    return service.post('/user/logout', {}, success, error);
+  logoutService() {
+    return service.post('/user/logout', {});
   }
 }

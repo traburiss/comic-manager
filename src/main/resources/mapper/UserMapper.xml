@@ -50,4 +50,23 @@
                  left join menu_info mi on mi.id = rmm.menu_id
         where ui.id = #{id}
     </select>
+    <select id="userInfo" resultMap="user_info">
+        select *
+        from user_info
+        where id = #{id}
+    </select>
+
+    <update id="updateUserName">
+        update user_info
+        set user_name = #{userName},
+            update_id = #{id}
+        where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        update user_info
+        set pass_word = #{password},
+            update_id = #{id}
+        where id = #{id}
+    </update>
 </mapper>

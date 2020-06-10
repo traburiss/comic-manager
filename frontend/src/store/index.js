@@ -17,7 +17,7 @@ export const global = new Vuex.Store({
   },
   mutations: {
     [UPDATE_USER_DATA](state) {
-      user.userData(data => {
+      user.userData().then(data => {
         state.userData = data['data']
         state.menuList = []
         state.userData.menuList.forEach(menu => {

@@ -5,6 +5,8 @@
         <el-submenu index='myself' :show-timeout='100' :hide-timeout='100'>
           <template slot='title'>我</template>
           <el-menu-item index='me'>{{userData.userName}}</el-menu-item>
+          <el-menu-item @click="$refs.editUserName.open()">修改用户名</el-menu-item>
+          <el-menu-item @click="$refs.editPassword.open()">修改密码</el-menu-item>
           <el-menu-item class='logout' @click='logout'>登出</el-menu-item>
         </el-submenu>
         <el-submenu v-if='menuList.includes("user")' index='manager' :show-timeout='100' :hide-timeout='100'>
@@ -22,6 +24,8 @@
     <el-main class='main'>
       <router-view></router-view>
     </el-main>
+    <edit-user-name ref="editUserName"/>
+    <edit-password ref="editPassword"/>
   </el-container>
 </template>
 
@@ -30,9 +34,12 @@
   import loading from '@/js/common/loading';
   import cookie from '@/js/common/cookie';
   import {UPDATE_USER_DATA} from '@/store'
+  import EditUserName from "@/page/me/EditUserName";
+  import EditPassword from "@/page/me/EditPassword";
   
   export default {
     name: 'Home',
+    components: {EditUserName, EditPassword},
     data() {
       return {
         activeIndex: 'search'
@@ -48,9 +55,9 @@
           confirmButtonClass: 'el-button--danger'
         }).then(() => {
           loading.start('正在登出')
-          api.logoutService(() => {
+          api.logoutService().then(() => {
             this.logoutFinish()
-          }, () => {
+          }).catch(() => {
             loading.stop()
             this.$message({type: 'warn', message: '登出失败'})
           })
