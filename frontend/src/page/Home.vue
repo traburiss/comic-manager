@@ -94,7 +94,6 @@
   .container {
     width: 100%;
     height: 100%;
-    background: #D9ECFF;
   }
 
   .container > .header {
@@ -106,7 +105,6 @@
 
   .container > .main {
     width: 100%;
-    background: #42b983;
     overflow: auto;
   }
 

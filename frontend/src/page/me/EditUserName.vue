@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="修改用户名" :visible.sync="dialogVisible" width="30%">
+  <el-dialog title="修改用户名" :visible.sync="dialogVisible" width="30%" :show-close="false">
     <el-form :model="user" :rules="rules" ref="userNameForm" label-width="80px">
       <el-form-item label="旧用户名">
         <el-input v-model="userName" :disabled="true"/>

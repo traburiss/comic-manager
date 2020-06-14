@@ -38,17 +38,18 @@ axios.interceptors.response.use(res => {
   }
 })
 export default {
-  service(url, method, params) {
+  service(url, method, data, params) {
     return axios({
       method: method,
       url,
-      data: params
+      data: data,
+      params: params
     })
   },
-  post(url, params) {
-    return this.service(url, 'post', params)
+  post(url, data, params) {
+    return this.service(url, 'post', data, params)
   },
   get(url, params) {
-    return this.service(url, 'get', params)
+    return this.service(url, 'get', null, params)
   }
 }

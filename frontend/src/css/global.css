@@ -9,7 +9,6 @@
 }
 
 .container {
-  text-align: center;
   color: #2c3e50;
   height: 100%;
   width: 100%;
@@ -18,7 +17,6 @@
 html {
   width: 100%;
   height: 100%;
-  background: #D9ECFF;
 }
 
 body {
@@ -29,7 +27,11 @@ body {
 el-form{
   width: 100%;
 }
-el-form-item{
+el-form-item {
   height: 50px;
+  width: 100%;
+}
+
+.el-form-item__content > .el-select {
   width: 100%;
 }

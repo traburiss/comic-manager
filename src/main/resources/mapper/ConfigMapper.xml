@@ -1,9 +1,59 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tcl.comic.manager.mapper.SysConfigMapper">
+    <resultMap id="system_config" type="com.tcl.comic.manager.entity.config.SystemConfigVO">
+        <result property="key" column="config_key"/>
+        <result property="value" column="config_value"/>
+        <result property="name" column="config_name"/>
+        <result property="desc" column="config_desc"/>
+        <result property="type" column="type"/>
+        <result property="updater" column="updater"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
     <select id="getValue" resultType="string">
         select config_value
         from sys_config
         where config_key = #{key}
     </select>
+
+    <select id="configList" resultMap="system_config">
+        select sc.*, ui.user_name as updater
+        from sys_config sc
+        left join user_info ui on sc.update_id = ui.id
+        where 1
+        <include refid="query"/>
+        order by sc.update_time desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="configCount" resultType="integer">
+        select count(*)
+        from sys_config sc
+        left join user_info ui on sc.update_id = ui.id
+        where 1
+        <include refid="query"/>
+    </select>
+
+    <sql id="query">
+        <if test="query.name != null and query.name != ''">
+            and sc.config_name like CONCAT(CONCAT('%', #{query.name}),'%')
+        </if>
+    </sql>
+
+    <insert id="addConfig">
+        insert into sys_config (config_key, config_value, config_name, config_desc, type, update_id, update_time)
+        values (#{item.key}, #{item.value}, #{item.name}, #{item.desc}, #{item.type}, #{userId}, current_timestamp)
+    </insert>
+
+    <update id="editConfig">
+        update sys_config
+        set config_value = #{item.value},
+            config_name  = #{item.name},
+            config_desc  = #{item.desc},
+            type         = #{item.type},
+            update_id    = #{userId},
+            update_time  = current_timestamp
+        where config_key = #{item.key}
+    </update>
 </mapper>

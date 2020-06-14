@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="修改密码" :visible.sync="dialogVisible" width="30%">
+  <el-dialog title="修改密码" :visible.sync="dialogVisible" width="30%" :show-close="false">
     <el-form :model="user" label-width="80px" ref="editPwdFrom" :rules="rules">
       <el-form-item label="旧密码" prop="oldPwd">
         <el-input v-model="user.oldPwd" placeholder="请输入旧的密码" show-password :clearable="true"/>
