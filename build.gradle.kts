@@ -34,6 +34,7 @@ dependencies {
     implementation("com.alibaba:druid-spring-boot-starter:1.1.22")
     implementation("com.alibaba:fastjson:1.2.70")
     implementation("org.apache.commons:commons-lang3:3.10")
+    implementation("org.apache.commons:commons-collections4:4.4")
     implementation("com.google.guava:guava:29.0-jre")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")

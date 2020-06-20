@@ -38,8 +38,8 @@ class LoginController {
     @Operation(summary = "登陆")
     @PostMapping(LOGIN_API)
     fun login(@RequestBody loginRequest: LoginRequestVO, exchange: ServerWebExchange): Response<String> {
-        loginService.login(loginRequest.loginName, loginRequest.passWord);
-        val token = loginService.login(loginRequest.loginName, loginRequest.passWord);
+        loginService.login(loginRequest.loginName, loginRequest.passWord)
+        val token = loginService.login(loginRequest.loginName, loginRequest.passWord)
         return if (StringUtils.isNotBlank(token)) {
             val responseCookie = if (systemConfigService.useExpire()) {
                 ResponseCookie.from(COOKIES_TOKEN, token).maxAge(systemConfigService.loginExpire()).path("/").build()
@@ -47,9 +47,9 @@ class LoginController {
                 ResponseCookie.from(COOKIES_TOKEN, token).maxAge(-1).path("/").build()
             }
             exchange.response.addCookie(responseCookie)
-            Response(data = token)
+            Response(token)
         } else {
-            Response(QUERY_ERROR.code, "登录失败，请检查账号密码", "")
+            Response("", QUERY_ERROR.code, "登录失败，请检查账号密码")
         }
     }
 
@@ -58,9 +58,9 @@ class LoginController {
     fun tokenCheck(@RequestParam("token") token: String): Response<Boolean> {
         val success = loginService.tokenCheck(token)
         return if (success) {
-            Response(data = success)
+            Response(success)
         } else {
-            Response(QUERY_ERROR.code, "校验token失败，你还未登录", success)
+            Response(success, QUERY_ERROR.code, "校验token失败，你还未登录")
         }
     }
 
@@ -72,10 +72,10 @@ class LoginController {
         return if (id is Int && cookie != null) {
             val token = cookie[0].value
             loginService.logout(id, token)
-            Response(SUCCESS.code, "登出成功", true)
+            Response(true, SUCCESS.code, "登出成功")
         } else {
             exchange.response.statusCode = HttpStatus.UNAUTHORIZED
-            Response(QUERY_ERROR.code, "你还未登录", false)
+            Response(false, QUERY_ERROR.code, "你还未登录")
         }
     }
 }

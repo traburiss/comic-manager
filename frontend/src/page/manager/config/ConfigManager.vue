@@ -1,15 +1,12 @@
 <template>
   <el-container>
-    <el-header class="header">
+    <el-header class="search-header">
       <el-form size="small" :model="queryParam" :inline="true">
         <el-form-item label="名称">
           <el-input v-model="queryParam.name" clearable/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="search">查询</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="success" @click="addSubmit">新增</el-button>
         </el-form-item>
       </el-form>
     </el-header>
@@ -106,18 +103,12 @@
         this.$refs.configInfo.openEdit(this, row)
       },
       dateFormatter(row, column, cellValue) {
-        if (cellValue != null) {
-          return formatTimestamp(cellValue)
-        } else {
-          return '未设置时间'
-        }
+        return formatTimestamp(cellValue)
       }
     }
   }
 </script>
 
 <style scoped>
-  .header {
-    text-align: end;
-  }
+
 </style>

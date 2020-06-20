@@ -110,7 +110,7 @@ class ComicManagerFilter : WebFilter {
         response.statusCode = HttpStatus.UNAUTHORIZED
         response.headers.contentType = APPLICATION_JSON
         response.headers.acceptCharset = Collections.singletonList(StandardCharsets.UTF_8)
-        val data = JSON.toJSONString(Response(ResponseCode.USER_ERROR.code, ResponseCode.USER_ERROR.msg, "请登陆")).toByteArray(Charsets.UTF_8)
+        val data = JSON.toJSONString(Response("请登陆", ResponseCode.USER_ERROR.code, ResponseCode.USER_ERROR.msg)).toByteArray(Charsets.UTF_8)
         logger.debug("login -> {}", path)
         return response.writeAndFlushWith(Flux.just(ByteBufFlux.just(response.bufferFactory().wrap(data))))
     }

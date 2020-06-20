@@ -3,7 +3,6 @@ package com.tcl.comic.manager.controller
 import com.tcl.comic.manager.config.Constant
 import com.tcl.comic.manager.entity.Page
 import com.tcl.comic.manager.entity.Response
-import com.tcl.comic.manager.entity.ResponseCode
 import com.tcl.comic.manager.entity.config.SysCfgRequestVO
 import com.tcl.comic.manager.entity.config.SystemConfigModifyVO
 import com.tcl.comic.manager.entity.config.SystemConfigVO
@@ -28,32 +27,21 @@ class SystemConfigController {
     @Operation(summary = "获取系统配置")
     @GetMapping("/list")
     fun getConfigList(query: SysCfgRequestVO): Response<Page<SystemConfigVO>> {
-        val data = systemConfigService.getConfigList(query)
-        return Response(data = data)
+        return systemConfigService.getConfigList(query)
     }
 
     @Operation(summary = "新增配置")
     @PostMapping("/add")
-    //傻逼了，这个功能根本木有用……算了，都开发完了
+    @Deprecated(message = "傻逼了，这个功能根本木有用……算了，都开发完了")
     fun addConfig(@RequestBody systemConfigVO: SystemConfigModifyVO, model: Model): Response<Boolean> {
         val userId = model.getAttribute(Constant.LOGIN_ID) as Int
-        val code = systemConfigService.addConfig(systemConfigVO, userId)
-        return when {
-            code == ResponseCode.PARAM_ERROR -> Response(code.code, "key已经使用，请更换一个", false)
-            code != ResponseCode.SUCCESS -> return Response(code.code, code.msg, false)
-            else -> return Response(code.code, code.msg, true)
-        }
+        return systemConfigService.addConfig(systemConfigVO, userId)
     }
 
     @Operation(summary = "编辑配置")
     @PostMapping("/edit")
     fun editConfig(@RequestBody systemConfigVO: SystemConfigModifyVO, model: Model): Response<Boolean> {
         val userId = model.getAttribute(Constant.LOGIN_ID) as Int
-        val code = systemConfigService.editConfig(systemConfigVO, userId)
-        return when {
-            code == ResponseCode.PARAM_ERROR -> Response(code.code, "不存在该key对应的值，请确认", false)
-            code != ResponseCode.SUCCESS -> return Response(code.code, code.msg, false)
-            else -> return Response(code.code, code.msg, true)
-        }
+        return systemConfigService.editConfig(systemConfigVO, userId)
     }
 }

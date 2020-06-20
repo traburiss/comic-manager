@@ -5,9 +5,9 @@
         <el-submenu index='myself' :show-timeout='100' :hide-timeout='100'>
           <template slot='title'>我</template>
           <el-menu-item index='me'>{{userData.userName}}</el-menu-item>
-          <el-menu-item @click="$refs.editUserName.open()">修改用户名</el-menu-item>
-          <el-menu-item @click="$refs.editPassword.open()">修改密码</el-menu-item>
-          <el-menu-item class='logout' @click='logout'>登出</el-menu-item>
+          <el-menu-item index='' @click="$refs.editUserName.open()">修改用户名</el-menu-item>
+          <el-menu-item index='' @click="$refs.editPassword.open()">修改密码</el-menu-item>
+          <el-menu-item index='' class='logout' @click='logout'>登出</el-menu-item>
         </el-submenu>
         <el-submenu v-if='menuList.includes("user")' index='manager' :show-timeout='100' :hide-timeout='100'>
           <template slot='title'>管理</template>

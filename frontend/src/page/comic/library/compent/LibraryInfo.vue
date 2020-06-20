@@ -1,22 +1,22 @@
 <template>
   <el-dialog :title="edit?'编辑':'新增'" :visible.sync="show" width="30%" :show-close="false">
-    <el-form :model="data" :rules="rules" label-width="100px" ref="addConfigForm">
-      <el-form-item label="key" prop="key">
-        <el-input v-model="data.key" :clearable="true" :disabled="edit"/>
-      </el-form-item>
-      <el-form-item label="值" prop="value">
-        <el-input v-model="data.value" :clearable="true"/>
-      </el-form-item>
+    <el-form :model="data" :rules="rules" label-width="100px" ref="libraryInfo">
       <el-form-item label="名称" prop="name">
-        <el-input v-model="data.name" :clearable="true" :disabled="edit"/>
+        <el-input v-model="data.name" :clearable="true"/>
       </el-form-item>
       <el-form-item label="说明" prop="desc">
         <el-input v-model="data.desc" :clearable="true"/>
       </el-form-item>
-      <el-form-item label="类型" prop="desc">
-        <el-select v-model="data.type" :disabled="edit">
+      <el-form-item label="类型" prop="type">
+        <el-select v-model="data.type">
           <el-option v-for="item in types" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
+      </el-form-item>
+      <el-form-item label="路径" prop="path">
+        <el-input v-model="data.path" :clearable="true"/>
+      </el-form-item>
+      <el-form-item label="参数" prop="param">
+        <el-input v-model="data.param" :clearable="true"/>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -27,53 +27,42 @@
 </template>
 
 <script>
-  import api from "@/js/api/sysConfig";
+  import api from "@/js/api/library";
   import loading from "@/js/common/loading";
   
   export default {
-    name: "ConfigInfo",
+    name: "LibraryInfo",
     data() {
-      let codeReg = new RegExp("^[5A-Za-z-0-9_]+$")
-      const validateKey = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入'));
-        } else if (!codeReg.test(value)) {
-          callback(new Error('请输入英文、数字与下划线'));
-        } else if (value.length < 1 || value.length > 20) {
-          callback(new Error('长度在 1 到 20 个字符'))
-        }
-        callback()
-      }
       return {
         edit: false,
         show: false,
         parent: null,
         data: {
-          key: "",
-          value: "",
+          id: 0,
           name: "",
           desc: "",
-          type: 1
+          type: 1,
+          path: "",
+          param: ""
         },
         types: [
-          {value: 0, label: '不可修改的系统配置'},
-          {value: 1, label: '可修改的系统配置'},
-          {value: 2, label: '用户配置默认值'}
+          {value: 1, label: '本地文件'},
+          {value: 2, label: 'SMB'}
         ],
         rules: {
-          key: [
-            {validator: validateKey, trigger: 'change'}
-          ],
-          value: [
-            {required: true, message: '请输入', trigger: 'change'},
-            {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change'}
-          ],
           name: [
             {required: true, message: '请输入', trigger: 'change'},
-            {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change'}
+            {min: 1, max: 30, message: '长度在 1 到 20 个字符', trigger: 'change'}
           ],
           desc: [
-            {min: 0, max: 100, message: '长度在 0 到 100 个字符', trigger: 'change'}
+            {min: 0, max: 60, message: '长度在 0 到 60 个字符', trigger: 'change'}
+          ],
+          path: [
+            {required: true, message: '请输入', trigger: 'change'},
+            {min: 1, max: 1024, message: '长度在 0 到 1024 个字符', trigger: 'change'}
+          ],
+          param: [
+            {min: 0, max: 1024, message: '长度在 0 到 1024 个字符', trigger: 'change'}
           ]
         }
       }
@@ -89,23 +78,24 @@
         this.show = true
         this.parent = parent
         this.data = {
-          key: data.key,
-          value: data.value,
+          id: data.id,
           name: data.name,
           desc: data.desc,
-          type: data.type
+          type: data.type,
+          path: data.path,
+          param: data.param
         }
       },
       close() {
         this.show = false
-        this.$refs.addConfigForm.resetFields()
+        this.$refs.libraryInfo.resetFields()
       },
       submitConfig() {
-        this.$refs.addConfigForm.validate(valid => {
+        this.$refs.libraryInfo.validate(valid => {
           if (valid) {
             loading.start("正在提交")
             if (this.edit) {
-              api.editConfig(this.data).then(res => {
+              api.editLibrary(this.data).then(res => {
                 if (res.code === 200) {
                   this.close()
                   this.$message.success("编辑成功")
@@ -117,7 +107,7 @@
                 loading.stop()
               })
             } else {
-              api.addConfig(this.data).then(res => {
+              api.addLibrary(this.data).then(res => {
                 if (res.code === 200) {
                   this.close()
                   this.$message.success("新增成功")

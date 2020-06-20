@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcl.comic.manager.mapper.LibraryMapper">
+    <resultMap id="library" type="com.tcl.comic.manager.entity.library.LibraryVO">
+        <id property="id" column="id"/>
+        <result property="name" column="library_name"/>
+        <result property="desc" column="library_desc"/>
+        <result property="type" column="library_type"/>
+        <result property="path" column="library_path"/>
+        <result property="param" column="library_param"/>
+        <result property="status" column="scan_status"/>
+        <result property="scanTime" column="scan_time"/>
+        <result property="scanMsg" column="scan_msg"/>
+        <result property="updater" column="updater"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap id="tag" type="com.tcl.comic.manager.entity.library.TagVO">
+        <id property="id" column="id"/>
+        <result property="libraryId" column="library_id"/>
+        <result property="name" column="tag_name"/>
+    </resultMap>
+
+    <select id="libraryList" resultMap="library">
+        select l.*, ui.user_name as updater
+        from library l
+        left join user_info ui on l.update_id = ui.id
+        where l.enabled = true
+        <include refid="query"/>
+        order by l.update_time desc
+        limit #{start},#{pageSize}
+    </select>
+    <select id="libraryCount" resultType="integer">
+        select count(*)
+        from library l
+        left join user_info ui on l.update_id = ui.id
+        where l.enabled = true
+        <include refid="query"/>
+    </select>
+    <sql id="query">
+        <if test="query.name != null and query.name != ''">
+            and l.library_name like CONCAT(CONCAT('%', #{query.name}),'%')
+        </if>
+    </sql>
+    <select id="getLibrary" resultMap="library">
+        select *
+        from library l
+                 left join user_info ui on l.update_id = ui.id
+        where l.enabled = true
+          and l.id = #{libraryId}
+    </select>
+    <insert id="addLibrary">
+        insert into library (library_name, library_desc, library_type, library_path, library_param, update_id)
+        values (#{item.name}, #{item.desc}, #{item.type}, #{item.path}, #{item.param}, #{userId})
+    </insert>
+    <update id="editLibrary">
+        update library
+        set library_name  = #{item.name},
+            library_desc  = #{item.desc},
+            library_type  = #{item.type},
+            library_path  = #{item.path},
+            library_param = #{item.param},
+            update_id     = #{userId},
+            update_time   = current_timestamp
+        where id = #{item.id}
+    </update>
+    <update id="removeLibrary">
+        update library
+        set enabled     = false,
+            update_id   = #{userId},
+            update_time = current_timestamp
+        where id = #{libraryId}
+    </update>
+    <select id="tagList" resultMap="tag">
+        select *
+        from tag
+        where library_id = #{libraryId}
+          and enabled = true
+    </select>
+    <insert id="addTag">
+        insert into tag (library_id, tag_name, update_id)
+        values (#{tag.libraryId}, #{tag.name}, #{userId})
+    </insert>
+    <update id="removeTag">
+        update tag
+        set enabled     = false,
+            update_id   = #{userId},
+            update_time = current_timestamp
+        where id = #{tagId}
+    </update>
+</mapper>

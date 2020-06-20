@@ -49,6 +49,9 @@ export default {
   post(url, data, params) {
     return this.service(url, 'post', data, params)
   },
+  delete(url, params) {
+    return this.service(url, 'delete', null, params)
+  },
   get(url, params) {
     return this.service(url, 'get', null, params)
   }

@@ -28,8 +28,9 @@ import org.springframework.web.server.ServerWebInputException
 @RestControllerAdvice
 class ControllerExceptionHandler {
     private val logger = LoggerFactory.getLogger(this.javaClass)
+
     @Autowired
-    private lateinit var loginService: LoginService;
+    private lateinit var loginService: LoginService
     
     @ModelAttribute
     fun addAttributes(exchange: ServerWebExchange, model: Model) {
@@ -51,13 +52,13 @@ class ControllerExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     fun handleCustomException(e: Exception): Response<String> {
         logger.error("参数错误", e)
-        return Response(PARAM_ERROR.code, PARAM_ERROR.msg + ":" + e.message, "")
+        return Response("", PARAM_ERROR.code, PARAM_ERROR.msg + ":" + e.message)
     }
 
     @ExceptionHandler(Exception::class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleException(e: Exception): Response<String> {
         logger.error("未知错误", e)
-        return Response(SERVER_ERROR.code, SERVER_ERROR.msg, e.message.toString())
+        return Response(e.message.toString(), SERVER_ERROR.code, SERVER_ERROR.msg)
     }
 }

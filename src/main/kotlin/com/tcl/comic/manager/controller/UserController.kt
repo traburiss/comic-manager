@@ -31,9 +31,9 @@ class UserController {
         val id = model.getAttribute(Constant.LOGIN_ID) as Int
         val userDataVO = userService.userData(id)
         return if (userDataVO != null) {
-            Response(ResponseCode.SUCCESS.code, "成功", userDataVO)
+            Response(userDataVO, ResponseCode.SUCCESS.code, "成功")
         } else {
-            Response(ResponseCode.QUERY_ERROR.code, "为查找到用户", UserDataVO())
+            Response(UserDataVO(), ResponseCode.QUERY_ERROR.code, "为查找到用户")
         }
     }
 
@@ -50,11 +50,6 @@ class UserController {
     @PostMapping("/update/password")
     fun updatePassword(model: Model, @RequestBody pwd: UpdatePasswordVO): Response<Boolean> {
         val id = model.getAttribute(Constant.LOGIN_ID) as Int
-        return when (val code = userService.updatePassword(id, pwd.pwd, pwd.newPwd)) {
-            ResponseCode.QUERY_ERROR -> Response(code.code, "为查找到对应用户", false)
-            ResponseCode.PARAM_ERROR -> Response(code.code, "原始密码错误", false)
-            ResponseCode.SUCCESS -> Response(data = true)
-            else -> return Response(code.code, code.msg, false)
-        }
+        return userService.updatePassword(id, pwd.pwd, pwd.newPwd)
     }
 }

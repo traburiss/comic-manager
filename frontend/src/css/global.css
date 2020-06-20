@@ -27,6 +27,7 @@ body {
 el-form{
   width: 100%;
 }
+
 el-form-item {
   height: 50px;
   width: 100%;
@@ -34,4 +35,8 @@ el-form-item {
 
 .el-form-item__content > .el-select {
   width: 100%;
+}
+
+.search-header {
+  text-align: end;
 }

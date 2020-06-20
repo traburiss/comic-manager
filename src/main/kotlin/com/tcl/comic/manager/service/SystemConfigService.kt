@@ -2,6 +2,7 @@ package com.tcl.comic.manager.service
 
 import com.tcl.comic.manager.config.Constant
 import com.tcl.comic.manager.entity.Page
+import com.tcl.comic.manager.entity.Response
 import com.tcl.comic.manager.entity.ResponseCode
 import com.tcl.comic.manager.entity.config.SysCfgRequestVO
 import com.tcl.comic.manager.entity.config.SystemConfigModifyVO
@@ -27,32 +28,33 @@ class SystemConfigService {
         return sysConfigMapper.getValue(key) ?: ""
     }
 
-    fun getConfigList(query: SysCfgRequestVO): Page<SystemConfigVO> {
+    fun getConfigList(query: SysCfgRequestVO): Response<Page<SystemConfigVO>> {
         val start = query.start()
         val list = sysConfigMapper.configList(query, start, query.pageSize)
         val count = sysConfigMapper.configCount(query)
-        return Page(list, count)
+        val data = Page(list, count)
+        return Response(data = data)
     }
 
-    fun addConfig(systemConfigVO: SystemConfigModifyVO, userId: Int): ResponseCode {
+    fun addConfig(systemConfigVO: SystemConfigModifyVO, userId: Int): Response<Boolean> {
         if (sysConfigMapper.getValue(systemConfigVO.key) != null) {
-            return ResponseCode.PARAM_ERROR
+            return Response(false, ResponseCode.PARAM_ERROR.code, "key已经使用，请更换一个")
         }
         sysConfigMapper.addConfig(systemConfigVO, userId)
-        return ResponseCode.SUCCESS
+        return Response(true)
     }
 
-    fun editConfig(systemConfigVO: SystemConfigModifyVO, userId: Int): ResponseCode {
+    fun editConfig(systemConfigVO: SystemConfigModifyVO, userId: Int): Response<Boolean> {
         if (sysConfigMapper.getValue(systemConfigVO.key) == null) {
-            return ResponseCode.PARAM_ERROR
+            return Response(false, ResponseCode.PARAM_ERROR.code, "不存在该key对应的值，请确认")
         }
         sysConfigMapper.editConfig(systemConfigVO, userId)
-        return ResponseCode.SUCCESS
+        return Response(true)
     }
 
     fun loginExpire(): Duration {
         val expired = NumberUtils.toLong(sysConfigMapper.getValue(Constant.CONFIG_LOGIN_EXPIRED))
-        return Duration.ofSeconds(expired);
+        return Duration.ofSeconds(expired)
     }
 
     fun useExpire(): Boolean {

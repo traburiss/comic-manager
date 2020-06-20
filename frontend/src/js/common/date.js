@@ -4,7 +4,11 @@
  * "yyyy-M-d h:m:s.S" ==> 2006-7-2 8:9:4.18
  */
 export function formatTimestamp(timestamp, fmt) {
-  return formatDate(new Date(timestamp), fmt)
+  if (timestamp !== null && timestamp !== undefined) {
+    return formatDate(new Date(timestamp), fmt)
+  } else {
+    return '未设置时间'
+  }
 }
 
 /**

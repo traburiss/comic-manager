@@ -22,6 +22,4 @@ data class SystemConfigVO(
         @Schema(description = "上次更新人")
         val updater: String,
         @Schema(description = "上次更新时间")
-        val updateTime: Timestamp) {
-    val updateTimestamp: Long = updateTime.time
-}
+        val updateTime: Timestamp)
