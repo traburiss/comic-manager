@@ -2,23 +2,14 @@
   <el-container class='container'>
     <el-header class='header' height='30px'>
       <el-menu :default-active='activeIndex' mode='horizontal' :router='true'>
-        <el-submenu index='myself' :show-timeout='100' :hide-timeout='100'>
+        <unlimited-menu v-for="submenu in menuTree" :key="submenu.id" :menu="submenu"/>
+        <el-submenu index='myself' :show-timeout='100' :hide-timeout='100' class="right-menu">
           <template slot='title'>我</template>
           <el-menu-item index='me'>{{userData.userName}}</el-menu-item>
           <el-menu-item index='' @click="$refs.editUserName.open()">修改用户名</el-menu-item>
           <el-menu-item index='' @click="$refs.editPassword.open()">修改密码</el-menu-item>
           <el-menu-item index='' class='logout' @click='logout'>登出</el-menu-item>
         </el-submenu>
-        <el-submenu v-if='menuList.includes("user")' index='manager' :show-timeout='100' :hide-timeout='100'>
-          <template slot='title'>管理</template>
-          <el-menu-item v-if='menuList.includes("user")' index='user'>用户</el-menu-item>
-          <el-menu-item v-if='menuList.includes("user")' index='role'>角色</el-menu-item>
-          <el-menu-item v-if='menuList.includes("user")' index='library'>书库</el-menu-item>
-          <el-menu-item v-if='menuList.includes("user")' index='config'>配置</el-menu-item>
-        </el-submenu>
-        <el-menu-item v-if='menuList.includes("user")' index='series'>系列</el-menu-item>
-        <el-menu-item v-if='menuList.includes("user")' index='comic'>漫画</el-menu-item>
-        <el-menu-item v-if='menuList.includes("user")' index='search'>搜索</el-menu-item>
       </el-menu>
     </el-header>
     <el-main class='main'>
@@ -36,10 +27,11 @@
   import {UPDATE_USER_DATA} from '@/store'
   import EditUserName from "@/page/me/EditUserName";
   import EditPassword from "@/page/me/EditPassword";
+  import UnlimitedMenu from "@/page/home/compent/UnlimitedMenu";
   
   export default {
     name: 'Home',
-    components: {EditUserName, EditPassword},
+    components: {UnlimitedMenu, EditUserName, EditPassword},
     data() {
       return {
         activeIndex: 'search'
@@ -79,8 +71,8 @@
       userData() {
         return this.$store.state.userData
       },
-      menuList() {
-        return this.$store.state.menuList
+      menuTree() {
+        return this.$store.state.menuTree
       }
     },
     mounted() {
@@ -123,17 +115,16 @@
   }
 
   .el-menu--horizontal > .el-menu-item {
-    float: right;
     height: 30px;
     line-height: 30px;
-  }
-
-  .el-menu--horizontal > .el-submenu {
-    float: right;
   }
 
   .el-menu--horizontal > .el-submenu .el-submenu__title {
     height: 30px;
     line-height: 30px;
+  }
+
+  .el-menu--horizontal > .right-menu {
+    float: right;
   }
 </style>

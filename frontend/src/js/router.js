@@ -1,4 +1,4 @@
-import Home from '@/page/Home';
+import Home from '@/page/home/Home';
 import Login from '@/page/Login';
 import Error from '@/page/Error';
 import Search from '@/page/search/Search';

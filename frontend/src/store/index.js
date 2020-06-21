@@ -13,15 +13,29 @@ export const global = new Vuex.Store({
       roleName: '',
       menuList: []
     },
-    menuList: [],
+    menuTree: [],
   },
   mutations: {
     [UPDATE_USER_DATA](state) {
       user.userData().then(data => {
         state.userData = data['data']
-        state.menuList = []
+        state.menuTree = []
+        let menuTreeHelp = {}
         state.userData.menuList.forEach(menu => {
-          state.menuList.push(menu['menuCode'])
+          menuTreeHelp[menu.id] = menu;
+          if (menu.parentId !== 0) {
+            let parentMenu = menuTreeHelp[menu.parentId]
+            if (Object.prototype.hasOwnProperty.call(parentMenu, 'children')) {
+              parentMenu.children.push(menu)
+            } else {
+              parentMenu['children'] = [menu]
+            }
+          }
+        })
+        Object.values(menuTreeHelp).forEach(menu => {
+          if (menu.parentId === 0) {
+            state.menuTree.push(menu)
+          }
         })
       })
     }

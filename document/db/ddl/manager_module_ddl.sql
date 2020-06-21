@@ -52,6 +52,8 @@ drop table if exists menu_info;
 create table menu_info
 (
     id          int primary key not null comment 'id',
+    parent_id   int             not null comment '父目录的ID',
+    sort        int             not null comment '目录排序',
     menu_name   varchar(30)     not null comment '目录名称',
     menu_desc   varchar(60)     not null comment '目录说明',
     menu_code   varchar(30)     not null comment '目录编码',
