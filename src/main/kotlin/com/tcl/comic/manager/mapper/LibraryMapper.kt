@@ -17,6 +17,7 @@ interface LibraryMapper {
     fun libraryCount(@Param("query") query: LibraryRequestVO): Int
     fun getLibrary(@Param("libraryId") libraryId: Int): LibraryVO?
     fun addLibrary(@Param("item") library: LibraryModifyVO, @Param("userId") userId: Int)
+    fun addDefaultLibraryRoleMap(@Param("libraryId") libraryId: Int)
     fun editLibrary(@Param("item") library: LibraryModifyVO, @Param("userId") userId: Int)
     fun removeLibrary(@Param("libraryId") libraryId: Int, @Param("userId") userId: Int)
     fun tagList(@Param("libraryId") libraryId: Int): List<TagVO>

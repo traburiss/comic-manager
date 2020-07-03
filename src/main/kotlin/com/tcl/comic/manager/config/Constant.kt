@@ -5,10 +5,11 @@ package com.tcl.comic.manager.config
  * describe:
  */
 object Constant {
-    
+
     const val LOGIN_NAME = "loginName"
     const val LOGIN_ID = "loginId"
-    
+    const val ROLE_ID = "role_id"
+
     const val API = "/api"
     const val SWAGGER = "swagger"
     const val API_DOC = "api-docs"

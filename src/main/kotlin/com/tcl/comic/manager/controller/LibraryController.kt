@@ -28,7 +28,9 @@ class LibraryController {
 
     @Operation(summary = "获取书库配置")
     @GetMapping("/list")
-    fun libraryList(query: LibraryRequestVO): Response<Page<LibraryVO>> {
+    fun libraryList(query: LibraryRequestVO, model: Model): Response<Page<LibraryVO>> {
+        val roleId = model.getAttribute(Constant.ROLE_ID) as Int
+        query.roleId = roleId
         return libraryService.getLibraryList(query)
     }
 

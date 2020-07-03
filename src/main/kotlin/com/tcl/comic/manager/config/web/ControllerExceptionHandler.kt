@@ -4,6 +4,7 @@ import com.tcl.comic.manager.config.Constant
 import com.tcl.comic.manager.config.Constant.API
 import com.tcl.comic.manager.config.Constant.LOGIN_ID
 import com.tcl.comic.manager.config.Constant.LOGIN_NAME
+import com.tcl.comic.manager.config.Constant.ROLE_ID
 import com.tcl.comic.manager.entity.Response
 import com.tcl.comic.manager.entity.ResponseCode.PARAM_ERROR
 import com.tcl.comic.manager.entity.ResponseCode.SERVER_ERROR
@@ -31,7 +32,7 @@ class ControllerExceptionHandler {
 
     @Autowired
     private lateinit var loginService: LoginService
-    
+
     @ModelAttribute
     fun addAttributes(exchange: ServerWebExchange, model: Model) {
         val path = exchange.request.uri.path
@@ -43,6 +44,7 @@ class ControllerExceptionHandler {
                 if (userInfo != null) {
                     model.addAttribute(LOGIN_NAME, userInfo.loginName)
                     model.addAttribute(LOGIN_ID, userInfo.id)
+                    model.addAttribute(ROLE_ID, userInfo.roleId)
                 }
             }
         }

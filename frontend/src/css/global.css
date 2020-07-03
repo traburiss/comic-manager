@@ -40,3 +40,7 @@ el-form-item {
 .search-header {
   text-align: end;
 }
+
+.clickable-tag:hover {
+  cursor: pointer;
+}

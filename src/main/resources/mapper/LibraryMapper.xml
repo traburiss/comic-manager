@@ -25,6 +25,7 @@
         select l.*, ui.user_name as updater
         from library l
         left join user_info ui on l.update_id = ui.id
+        left join role_library_map rlm on l.id = rlm.library_id
         where l.enabled = true
         <include refid="query"/>
         order by l.update_time desc
@@ -34,10 +35,12 @@
         select count(*)
         from library l
         left join user_info ui on l.update_id = ui.id
+        left join role_library_map rlm on l.id = rlm.library_id
         where l.enabled = true
         <include refid="query"/>
     </select>
     <sql id="query">
+        and rlm.role_id = #{query.roleId}
         <if test="query.name != null and query.name != ''">
             and l.library_name like CONCAT(CONCAT('%', #{query.name}),'%')
         </if>
@@ -49,9 +52,13 @@
         where l.enabled = true
           and l.id = #{libraryId}
     </select>
-    <insert id="addLibrary">
+    <insert id="addLibrary" useGeneratedKeys="true" keyProperty="item.id">
         insert into library (library_name, library_desc, library_type, library_path, library_param, update_id)
         values (#{item.name}, #{item.desc}, #{item.type}, #{item.path}, #{item.param}, #{userId})
+    </insert>
+    <insert id="addDefaultLibraryRoleMap">
+        insert into role_library_map (role_id, library_id)
+        values (1, #{libraryId});
     </insert>
     <update id="editLibrary">
         update library

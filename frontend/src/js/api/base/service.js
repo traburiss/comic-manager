@@ -36,6 +36,17 @@ axios.interceptors.response.use(res => {
     Message.error('未知错误，请稍后重试')
     return Promise.reject({code: -1, msg: '未知错误，请稍后重试'});
   }
+}, error => {
+  const res = error.response
+  console.info(res)
+  const data = res.data;
+  if (data !== undefined && data !== null) {
+    Message.error(data.msg)
+    return Promise.reject(data);
+  } else {
+    Message.error(res.statusText)
+    return Promise.reject({code: res.status, msg: res.statusText});
+  }
 })
 export default {
   service(url, method, data, params) {

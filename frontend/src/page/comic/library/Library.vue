@@ -32,14 +32,14 @@
         </el-table-column>
         <el-table-column prop="status" label="扫描状态" min-width="5%">
           <template slot-scope="scope">
-            <el-tooltip v-if="scope.row.status === 0" class="item" content="已准备" placement="top">
-              <el-tag type="warning" size="mini">R</el-tag>
+            <el-tooltip v-if="scope.row.status === 0" class="item" content="已准备，点击开始扫描" placement="top">
+              <el-tag type="warning" size="mini" @click="scanLibrary(scope.row)" class="clickable-tag">R</el-tag>
             </el-tooltip>
             <el-tooltip v-else-if="scope.row.status === 1" class="item" content="正在扫描" placement="top">
               <el-tag type="success" size="mini">P</el-tag>
             </el-tooltip>
-            <el-tooltip v-else-if="scope.row.status === 2" class="item" content="已完成扫描" placement="top">
-              <el-tag type="success" size="mini">F</el-tag>
+            <el-tooltip v-else-if="scope.row.status === 2" class="item" content="已完成扫描，点击重新扫描" placement="top">
+              <el-tag type="success" size="mini" @click="scanLibrary(scope.row)" class="clickable-tag">F</el-tag>
             </el-tooltip>
             <el-tooltip v-else class="item" content="未知" placement="top">
               <el-tag type="danger" size="mini">未</el-tag>
@@ -85,7 +85,7 @@
   import LibraryInfo from "@/page/comic/library/compent/LibraryInfo";
   import loading from "@/js/common/loading";
   import TagInfo from "@/page/comic/library/compent/TagInfo";
-  
+
   export default {
     name: 'Library',
     components: {TagInfo, LibraryInfo},
@@ -153,6 +153,16 @@
       },
       dateFormatter(row, column, cellValue) {
         return formatTimestamp(cellValue)
+      },
+      scanLibrary(row) {
+        this.$confirm('请确认是否要开始扫描书库', '扫描', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'info',
+          showClose: false
+        }).then(() => {
+          console.info(row)
+        })
       }
     }
   }

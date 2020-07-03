@@ -5,6 +5,7 @@ package com.tcl.comic.manager.entity.user
  * describe: 用户信息的实体类
  */
 data class UserInfoDo(val id: Int = 0,
+                      val roleId: Int = 0,
                       val userName: String = "",
                       val loginName: String = "",
                       val passWord: String = "",

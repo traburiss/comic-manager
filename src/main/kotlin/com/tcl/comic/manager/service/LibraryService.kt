@@ -12,6 +12,7 @@ import org.apache.commons.lang3.ObjectUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Created by traburiss on 2020/6/20.
@@ -34,11 +35,13 @@ class LibraryService {
         return Response(data)
     }
 
+    @Transactional
     fun addLibrary(library: LibraryModifyVO, userId: Int): Response<Boolean> {
         if (ObjectUtils.isEmpty(library)) {
             return Response(false, ResponseCode.PARAM_ERROR.code, "参数为空，请检查参数")
         }
         libraryMapper.addLibrary(library, userId)
+        libraryMapper.addDefaultLibraryRoleMap(library.id)
         return Response(true)
     }
 

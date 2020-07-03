@@ -3,6 +3,7 @@
 <mapper namespace="com.tcl.comic.manager.mapper.UserMapper">
     <resultMap id="user_info" type="com.tcl.comic.manager.entity.user.UserInfoDo">
         <id property="id" column="id"/>
+        <id property="roleId" column="role_id"/>
         <result property="userName" column="user_name"/>
         <result property="loginName" column="login_name"/>
         <result property="passWord" column="pass_word"/>
@@ -13,9 +14,9 @@
         <result property="userName" column="user_name"/>
         <result property="loginName" column="login_name"/>
         <result property="roleName" column="role_name"/>
-        <collection property="menuList" ofType="com.tcl.comic.manager.entity.user.MenuInfo" resultMap="menu_info"/>
+        <collection property="menuList" ofType="com.tcl.comic.manager.entity.user.MenuInfoVO" resultMap="menu_info"/>
     </resultMap>
-    <resultMap id="menu_info" type="com.tcl.comic.manager.entity.user.MenuInfo">
+    <resultMap id="menu_info" type="com.tcl.comic.manager.entity.user.MenuInfoVO">
         <id property="id" column="menu_id"/>
         <result property="parentId" column="menu_parent_id"/>
         <result property="menuName" column="menu_name"/>
@@ -24,14 +25,16 @@
         <result property="menuCode" column="menu_code"/>
     </resultMap>
     <select id="login" resultMap="user_info">
-        select *
-        from user_info
+        select ui.*, urm.role_id
+        from user_info ui
+                 left join user_role_map urm on urm.user_id = ui.id
         where login_name = #{loginName}
           and pass_word = #{passWord}
     </select>
     <select id="tokenGetData" resultMap="user_info">
-        select *
-        from user_info
+        select ui.*, urm.role_id
+        from user_info ui
+                 left join user_role_map urm on urm.user_id = ui.id
         where token = #{token}
     </select>
     <update id="updateToken">
@@ -62,8 +65,9 @@
         order by mi.parent_id, mi.sort
     </select>
     <select id="userInfo" resultMap="user_info">
-        select *
-        from user_info
+        select ui.*, urm.role_id
+        from user_info ui
+                 left join user_role_map urm on urm.user_id = ui.id
         where id = #{id}
     </select>
 

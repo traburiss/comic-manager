@@ -12,4 +12,6 @@ data class LibraryRequestVO(
         override val page: Int,
         override val pageSize: Int,
         @Schema(description = "书库名称")
-        val name: String) : PageRequest(page, pageSize)
+        val name: String,
+        @Schema(description = "查询人角色ID")
+        var roleId: Int = 0) : PageRequest(page, pageSize)

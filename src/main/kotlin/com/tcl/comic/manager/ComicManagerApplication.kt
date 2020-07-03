@@ -2,6 +2,7 @@ package com.tcl.comic.manager
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
+import kotlinx.coroutines.runBlocking
 import org.mybatis.spring.annotation.MapperScan
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -10,6 +11,7 @@ import org.springframework.boot.runApplication
 @MapperScan("com.tcl.comic.manager.mapper")
 @OpenAPIDefinition(info = Info(title = "comic-manager", version = "1.0", description = "漫画管理工具"))
 class ComicManagerApplication
-fun main(args: Array<String>) {
+
+fun main(args: Array<String>) = runBlocking<Unit> {
     runApplication<ComicManagerApplication>(*args)
 }
