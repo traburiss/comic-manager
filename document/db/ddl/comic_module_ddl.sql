@@ -21,7 +21,8 @@ drop table if exists role_library_map;
 create table role_library_map
 (
     role_id    int not null comment 'role_info的id',
-    library_id int not null comment 'library_的id'
+    library_id int not null comment 'library_的id',
+    PRIMARY KEY (role_id, library_id)
 ) engine = InnoDB comment '角色书库关联表';
 
 drop table if exists comic_series;

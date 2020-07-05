@@ -67,12 +67,14 @@ drop table if exists user_role_map;
 create table user_role_map
 (
     user_id int not null comment 'user_info的id',
-    role_id int not null comment 'user_info的id'
+    role_id int not null comment 'user_info的id',
+    PRIMARY KEY (user_id, role_id)
 ) engine = InnoDB comment '用户角色关联表';
 
 drop table if exists role_menu_map;
 create table role_menu_map
 (
     role_id int not null comment 'user_info的id',
-    menu_id int not null comment 'menu_info的id'
+    menu_id int not null comment 'menu_info的id',
+    PRIMARY KEY (role_id, menu_id)
 ) engine = InnoDB comment '角色目录关联表';

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcl.comic.manager.mapper.RoleMapper">
+    <resultMap id="library" type="com.tcl.comic.manager.entity.role.RoleVO">
+        <id property="id" column="id"/>
+        <result property="name" column="role_name"/>
+        <result property="desc" column="role_desc"/>
+        <result property="updater" column="updater"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap id="menu_info" type="com.tcl.comic.manager.entity.user.MenuInfoVO">
+        <id property="id" column="menu_id"/>
+        <result property="parentId" column="menu_parent_id"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="menuDesc" column="menu_desc"/>
+        <result property="menuCode" column="menu_code"/>
+    </resultMap>
+
+    <select id="roleList" resultMap="library">
+        select ri.*, ui.user_name as updater
+        from role_info ri
+        left join user_info ui on ri.update_id = ui.id
+        where
+        <include refid="query"/>
+        order by ri.update_time desc
+        limit #{start},#{pageSize}
+    </select>
+    <select id="roleCount" resultType="integer">
+        select count(ri.id)
+        from role_info ri
+        left join user_info ui on ri.update_id = ui.id
+        where
+        <include refid="query"/>
+    </select>
+    <sql id="query">
+        ri.enabled = true
+        <if test="query.name != null and query.name != ''">
+            and ri.role_name like CONCAT(CONCAT('%', #{query.name}),'%')
+        </if>
+    </sql>
+    <select id="getRole" resultMap="library">
+        select ri.*, ui.user_name as updater
+        from role_info ri
+                 left join user_info ui on ri.update_id = ui.id
+        where ri.enabled = true
+          and ri.id = #{roleId}
+    </select>
+    <insert id="addRole" useGeneratedKeys="true" keyProperty="item.id">
+        insert into role_info (role_name, role_desc, update_id)
+        values (#{item.name}, #{item.desc}, #{userId})
+    </insert>
+    <insert id="relateRoleAndLibrary">
+        insert into role_library_map (role_id, library_id)
+        values (#{roleId}, #{libraryId})
+    </insert>
+    <insert id="relateRoleAndMenu">
+        insert into role_menu_map (role_id, menu_id)
+        values (#{roleId}, #{menuId})
+    </insert>
+    <update id="editRole">
+        update role_info
+        set role_name   = #{item.name},
+            role_desc   = #{item.desc},
+            update_id   = #{userId},
+            update_time = current_timestamp
+        where id = #{item.id}
+    </update>
+    <update id="removeRole">
+        update role_info
+        set enabled     = false,
+            update_id   = #{userId},
+            update_time = current_timestamp
+        where id = #{roleId}
+    </update>
+</mapper>

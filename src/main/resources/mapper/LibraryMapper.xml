@@ -26,27 +26,28 @@
         from library l
         left join user_info ui on l.update_id = ui.id
         left join role_library_map rlm on l.id = rlm.library_id
-        where l.enabled = true
+        where
         <include refid="query"/>
         order by l.update_time desc
         limit #{start},#{pageSize}
     </select>
     <select id="libraryCount" resultType="integer">
-        select count(*)
+        select count(l.id)
         from library l
         left join user_info ui on l.update_id = ui.id
         left join role_library_map rlm on l.id = rlm.library_id
-        where l.enabled = true
+        where
         <include refid="query"/>
     </select>
     <sql id="query">
+        l.enabled = true
         and rlm.role_id = #{query.roleId}
         <if test="query.name != null and query.name != ''">
             and l.library_name like CONCAT(CONCAT('%', #{query.name}),'%')
         </if>
     </sql>
     <select id="getLibrary" resultMap="library">
-        select *
+        select l.*, ui.user_name as updater
         from library l
                  left join user_info ui on l.update_id = ui.id
         where l.enabled = true
