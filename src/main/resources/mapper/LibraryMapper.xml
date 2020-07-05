@@ -58,7 +58,10 @@
     </insert>
     <insert id="addDefaultLibraryRoleMap">
         insert into role_library_map (role_id, library_id)
-        values (1, #{libraryId});
+        values (#{roleId}, #{libraryId})
+        <if test="roleId != 1">
+            ,(1, #{libraryId})
+        </if>
     </insert>
     <update id="editLibrary">
         update library

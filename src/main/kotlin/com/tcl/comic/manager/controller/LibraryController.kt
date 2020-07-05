@@ -38,7 +38,8 @@ class LibraryController {
     @PostMapping("/add")
     fun addLibrary(@RequestBody library: LibraryModifyVO, model: Model): Response<Boolean> {
         val userId = model.getAttribute(Constant.LOGIN_ID) as Int
-        return libraryService.addLibrary(library, userId)
+        val roleId = model.getAttribute(Constant.ROLE_ID) as Int
+        return libraryService.addLibrary(library, userId, roleId)
     }
 
     @Operation(summary = "修改书库")

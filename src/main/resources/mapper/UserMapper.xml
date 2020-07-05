@@ -28,24 +28,28 @@
         select ui.*, urm.role_id
         from user_info ui
                  left join user_role_map urm on urm.user_id = ui.id
-        where login_name = #{loginName}
+        where enabled = true
+          and login_name = #{loginName}
           and pass_word = #{passWord}
     </select>
     <select id="tokenGetData" resultMap="user_info">
         select ui.*, urm.role_id
         from user_info ui
                  left join user_role_map urm on urm.user_id = ui.id
-        where token = #{token}
+        where enabled = true
+          and token = #{token}
     </select>
     <update id="updateToken">
         update user_info
         set token = #{token}
-        where id = #{id}
+        where enabled = true
+          and id = #{id}
     </update>
     <update id="deleteToken">
         update user_info
         set token = null
-        where id = #{id}
+        where enabled = true
+          and id = #{id}
     </update>
     <select id="userData" resultMap="user_data">
         select ui.user_name,
@@ -61,27 +65,31 @@
                  left join role_info ri on ri.id = urm.role_id
                  left join role_menu_map rmm on rmm.role_id = urm.role_id
                  left join menu_info mi on mi.id = rmm.menu_id
-        where ui.id = #{id}
+        where ui.enabled = true
+          and ui.id = #{id}
         order by mi.parent_id, mi.sort
     </select>
     <select id="userInfo" resultMap="user_info">
         select ui.*, urm.role_id
         from user_info ui
                  left join user_role_map urm on urm.user_id = ui.id
-        where id = #{id}
+        where enabled = true
+          and id = #{id}
     </select>
 
     <update id="updateUserName">
         update user_info
         set user_name = #{userName},
             update_id = #{id}
-        where id = #{id}
+        where enabled = true
+          and id = #{id}
     </update>
 
     <update id="updatePassword">
         update user_info
         set pass_word = #{password},
             update_id = #{id}
-        where id = #{id}
+        where enabled = true
+          and id = #{id}
     </update>
 </mapper>

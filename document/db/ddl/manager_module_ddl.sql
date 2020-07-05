@@ -33,6 +33,7 @@ create table user_info
     pass_word   varchar(65)                    not null comment '密码',
     salt        varchar(5)                     not null comment '加密的盐',
     token       varchar(100) default null comment 'token,懒得弄redis',
+    enabled     boolean      default true      not null comment '是否可用',
     update_id   int                            not null comment '上次更新人的id，0为system',
     update_time timestamp    default current_timestamp on update current_timestamp comment '上次更新时间'
 ) engine = InnoDB comment '用户信息表';
@@ -44,6 +45,7 @@ create table role_info
     id          int primary key auto_increment not null comment 'id',
     role_name   varchar(30)                    not null comment '角色名称',
     role_desc   varchar(60)                    not null comment '角色说明',
+    enabled     boolean   default true         not null comment '是否可用',
     update_id   int                            not null comment '上次更新人的id，0为system',
     update_time timestamp default current_timestamp on update current_timestamp comment '上次更新时间'
 ) engine = InnoDB comment '角色表';

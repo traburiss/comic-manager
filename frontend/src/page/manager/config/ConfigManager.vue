@@ -34,7 +34,9 @@
         <el-table-column prop="updateTime" label="更新时间" :formatter="dateFormatter" min-width="10%" :show-overflow-tooltip="true"/>
         <el-table-column prop="operation" label="操作" min-width="5%">
           <template slot-scope="scope">
-            <el-button :disabled="scope.row.type === 0" size="mini" @click="editSubmit(scope.row)">编辑</el-button>
+            <el-tooltip class="item" content="编辑" placement="top">
+              <el-button :disabled="scope.row.type === 0" size="mini" @click="editSubmit(scope.row)" type="primary" icon="el-icon-edit"/>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -56,7 +58,7 @@
   import api from "@/js/api/sysConfig";
   import {formatTimestamp} from '@/js/common/date'
   import ConfigInfo from "@/page/manager/config/compent/ConfigInfo";
-  
+
   export default {
     name: 'ComicManager',
     components: {ConfigInfo},

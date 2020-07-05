@@ -36,12 +36,12 @@ class LibraryService {
     }
 
     @Transactional
-    fun addLibrary(library: LibraryModifyVO, userId: Int): Response<Boolean> {
+    fun addLibrary(library: LibraryModifyVO, userId: Int, roleId: Int): Response<Boolean> {
         if (ObjectUtils.isEmpty(library)) {
             return Response(false, ResponseCode.PARAM_ERROR.code, "参数为空，请检查参数")
         }
         libraryMapper.addLibrary(library, userId)
-        libraryMapper.addDefaultLibraryRoleMap(library.id)
+        libraryMapper.addDefaultLibraryRoleMap(library.id, roleId)
         return Response(true)
     }
 
