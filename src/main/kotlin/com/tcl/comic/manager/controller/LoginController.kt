@@ -19,6 +19,7 @@ import org.springframework.http.ResponseCookie
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ServerWebExchange
+import reactor.core.publisher.Mono
 
 
 /**
@@ -30,52 +31,58 @@ import org.springframework.web.server.ServerWebExchange
 class LoginController {
 
     @Autowired
-    lateinit var loginService: LoginService
+    private lateinit var loginService: LoginService
 
     @Autowired
-    lateinit var systemConfigService: SystemConfigService
+    private lateinit var systemConfigService: SystemConfigService
 
     @Operation(summary = "登陆")
     @PostMapping(LOGIN_API)
-    fun login(@RequestBody loginRequest: LoginRequestVO, exchange: ServerWebExchange): Response<String> {
-        loginService.login(loginRequest.loginName, loginRequest.passWord)
-        val token = loginService.login(loginRequest.loginName, loginRequest.passWord)
-        return if (StringUtils.isNotBlank(token)) {
-            val responseCookie = if (systemConfigService.useExpire()) {
-                ResponseCookie.from(COOKIES_TOKEN, token).maxAge(systemConfigService.loginExpire()).path("/").build()
+    fun login(@RequestBody loginRequest: LoginRequestVO, exchange: ServerWebExchange): Mono<Response<String>> {
+        return Mono.fromSupplier {
+            loginService.login(loginRequest.loginName, loginRequest.passWord)
+            val token = loginService.login(loginRequest.loginName, loginRequest.passWord)
+            if (StringUtils.isNotBlank(token)) {
+                val responseCookie = if (systemConfigService.useExpire()) {
+                    ResponseCookie.from(COOKIES_TOKEN, token).maxAge(systemConfigService.loginExpire()).path("/").build()
+                } else {
+                    ResponseCookie.from(COOKIES_TOKEN, token).maxAge(-1).path("/").build()
+                }
+                exchange.response.addCookie(responseCookie)
+                Response(token)
             } else {
-                ResponseCookie.from(COOKIES_TOKEN, token).maxAge(-1).path("/").build()
+                Response("", QUERY_ERROR.code, "登录失败，请检查账号密码")
             }
-            exchange.response.addCookie(responseCookie)
-            Response(token)
-        } else {
-            Response("", QUERY_ERROR.code, "登录失败，请检查账号密码")
         }
     }
 
     @Operation(summary = "检查token")
     @GetMapping("/api/token/check")
-    fun tokenCheck(@RequestParam("token") token: String): Response<Boolean> {
-        val success = loginService.tokenCheck(token)
-        return if (success) {
-            Response(success)
-        } else {
-            Response(success, QUERY_ERROR.code, "校验token失败，你还未登录")
+    fun tokenCheck(@RequestParam("token") token: String): Mono<Response<Boolean>> {
+        return Mono.fromSupplier {
+            val success = loginService.tokenCheck(token)
+            if (success) {
+                Response(success)
+            } else {
+                Response(success, QUERY_ERROR.code, "校验token失败，你还未登录")
+            }
         }
     }
 
     @Operation(summary = "登出")
     @PostMapping(LOGOUT_API)
-    fun logout(model: Model, exchange: ServerWebExchange): Response<Boolean> {
-        val id = model.getAttribute(LOGIN_ID)
-        val cookie = exchange.request.cookies[COOKIES_TOKEN]
-        return if (id is Int && cookie != null) {
-            val token = cookie[0].value
-            loginService.logout(id, token)
-            Response(true, SUCCESS.code, "登出成功")
-        } else {
-            exchange.response.statusCode = HttpStatus.UNAUTHORIZED
-            Response(false, QUERY_ERROR.code, "你还未登录")
+    fun logout(model: Model, exchange: ServerWebExchange): Mono<Response<Boolean>> {
+        return Mono.fromSupplier {
+            val id = model.getAttribute(LOGIN_ID)
+            val cookie = exchange.request.cookies[COOKIES_TOKEN]
+            if (id is Int && cookie != null) {
+                val token = cookie[0].value
+                loginService.logout(id, token)
+                Response(true, SUCCESS.code, "登出成功")
+            } else {
+                exchange.response.statusCode = HttpStatus.UNAUTHORIZED
+                Response(false, QUERY_ERROR.code, "你还未登录")
+            }
         }
     }
 }

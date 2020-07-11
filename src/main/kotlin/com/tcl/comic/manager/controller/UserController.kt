@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Mono
 
 /**
  * Created by traburiss on 2020/6/9.
@@ -23,33 +24,39 @@ import org.springframework.web.bind.annotation.*
 class UserController {
 
     @Autowired
-    lateinit var userService: UserService
+    private lateinit var userService: UserService
 
     @Operation(summary = "获取用户信息")
     @GetMapping("/data")
-    fun userData(model: Model): Response<UserDataVO> {
-        val id = model.getAttribute(Constant.LOGIN_ID) as Int
-        val userDataVO = userService.userData(id)
-        return if (userDataVO != null) {
-            Response(userDataVO, ResponseCode.SUCCESS.code, "成功")
-        } else {
-            Response(UserDataVO(), ResponseCode.QUERY_ERROR.code, "为查找到用户")
+    fun userData(model: Model): Mono<Response<UserDataVO>> {
+        return Mono.fromSupplier {
+            val id = model.getAttribute(Constant.LOGIN_ID) as Int
+            val userDataVO = userService.userData(id)
+            if (userDataVO != null) {
+                Response(userDataVO, ResponseCode.SUCCESS.code, "成功")
+            } else {
+                Response(UserDataVO(), ResponseCode.QUERY_ERROR.code, "为查找到用户")
+            }
         }
     }
 
 
     @Operation(summary = "更新用户名")
     @PostMapping("/update/username")
-    fun updateUserName(model: Model, @RequestBody userName: UpdateUserNameVO): Response<Boolean> {
-        val id = model.getAttribute(Constant.LOGIN_ID) as Int
-        userService.updateUserName(id, userName.userName)
-        return Response(data = true)
+    fun updateUserName(model: Model, @RequestBody userName: UpdateUserNameVO): Mono<Response<Boolean>> {
+        return Mono.fromSupplier {
+            val id = model.getAttribute(Constant.LOGIN_ID) as Int
+            userService.updateUserName(id, userName.userName)
+            Response(data = true)
+        }
     }
 
     @Operation(summary = "更新用户密码")
     @PostMapping("/update/password")
-    fun updatePassword(model: Model, @RequestBody pwd: UpdatePasswordVO): Response<Boolean> {
-        val id = model.getAttribute(Constant.LOGIN_ID) as Int
-        return userService.updatePassword(id, pwd.pwd, pwd.newPwd)
+    fun updatePassword(model: Model, @RequestBody pwd: UpdatePasswordVO): Mono<Response<Boolean>> {
+        return Mono.fromSupplier {
+            val id = model.getAttribute(Constant.LOGIN_ID) as Int
+            userService.updatePassword(id, pwd.pwd, pwd.newPwd)
+        }
     }
 }

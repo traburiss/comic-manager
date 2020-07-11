@@ -44,7 +44,7 @@ class ComicManagerFilter : WebFilter {
     val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
-    lateinit var loginService: LoginService
+    private lateinit var loginService: LoginService
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         val path = exchange.request.uri.path
@@ -103,7 +103,7 @@ class ComicManagerFilter : WebFilter {
         logger.debug("login -> {}", path)
         return response.setComplete()
     }
-    
+
     fun responseError(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         val path = exchange.request.uri.path
         val response = exchange.response

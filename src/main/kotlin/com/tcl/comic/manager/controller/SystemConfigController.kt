@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Mono
 
 /**
  * Created by traburiss on 2020/6/14.
@@ -26,22 +27,28 @@ class SystemConfigController {
 
     @Operation(summary = "获取系统配置")
     @GetMapping("/list")
-    fun getConfigList(query: SysCfgRequestVO): Response<Page<SystemConfigVO>> {
-        return systemConfigService.getConfigList(query)
+    fun getConfigList(query: SysCfgRequestVO): Mono<Response<Page<SystemConfigVO>>> {
+        return Mono.fromSupplier {
+            systemConfigService.getConfigList(query)
+        }
     }
 
     @Operation(summary = "新增配置")
     @PostMapping("/add")
     @Deprecated(message = "傻逼了，这个功能根本木有用……算了，都开发完了")
-    fun addConfig(@RequestBody systemConfigVO: SystemConfigModifyVO, model: Model): Response<Boolean> {
-        val userId = model.getAttribute(Constant.LOGIN_ID) as Int
-        return systemConfigService.addConfig(systemConfigVO, userId)
+    fun addConfig(@RequestBody systemConfigVO: SystemConfigModifyVO, model: Model): Mono<Response<Boolean>> {
+        return Mono.fromSupplier {
+            val userId = model.getAttribute(Constant.LOGIN_ID) as Int
+            systemConfigService.addConfig(systemConfigVO, userId)
+        }
     }
 
     @Operation(summary = "编辑配置")
     @PostMapping("/edit")
-    fun editConfig(@RequestBody systemConfigVO: SystemConfigModifyVO, model: Model): Response<Boolean> {
-        val userId = model.getAttribute(Constant.LOGIN_ID) as Int
-        return systemConfigService.editConfig(systemConfigVO, userId)
+    fun editConfig(@RequestBody systemConfigVO: SystemConfigModifyVO, model: Model): Mono<Response<Boolean>> {
+        return Mono.fromSupplier {
+            val userId = model.getAttribute(Constant.LOGIN_ID) as Int
+            systemConfigService.editConfig(systemConfigVO, userId)
+        }
     }
 }

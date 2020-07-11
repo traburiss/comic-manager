@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tcl.comic.manager.mapper.MenuMapper">
+
+    <resultMap id="menu_info" type="com.tcl.comic.manager.entity.user.MenuInfoVO">
+        <id property="id" column="menu_id"/>
+        <result property="parentId" column="menu_parent_id"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="menuDesc" column="menu_desc"/>
+        <result property="menuCode" column="menu_code"/>
+    </resultMap>
+
+    <select id="getMenuById" resultMap="menu_info">
+        select *
+        from menu_info
+        where id = #{menuId}
+    </select>
+
+</mapper>
